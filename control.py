@@ -22,11 +22,12 @@ import cpphelper_calc
 # replace "readchar" library (or do not need?)
 # check mortor power +-
 # measure cycle time and change to C
+# add git readme and license
 ###### NOTE ###### NOTE ###### NOTE ###### NOTE ###### NOTE ######
 
 
 #connstant
-PIN_PWM = ( "P1_36" , "P2_1" , "P2_3" , "P1_33" )
+PIN_PWM = ( "P1_33" , "P1_36" , "P2_1" , "P2_3" )
 PIN_BATT = "P1_25"
 K_ADC = 1.80 * 10.5
 THRESHOLD_BATT = 7.4
@@ -62,7 +63,6 @@ def get_batt() :
             flag_main = False
             while ( True ) :
                 time.sleep(100)
-        print ("Running...")
         time.sleep(10)
 
 
@@ -342,6 +342,7 @@ def init_mpu(spi) :
     print ( "###### Finish MPU initialize! ######" )
     print ( "" )
     return accel_bias, gyro_bias
+
     
 
 #################################################  main  #################################################
@@ -381,56 +382,81 @@ for i in range (4) :
         except :
             print(sys.exc_info())
             sys.exit("Error in booting ESC")
-print ( "Success in ESC Setup " )
+print ( "Success in PWM Setup " )
 print ( "Connect Battery to ESC, press 'y' to continue..." )
 char = input(">")
 if ( char != 'y' ) :
     sys.exit("User Interrupt")
-
-
-###### raise program ######
-flag_main = True
+print ( "Start" )
 
 t_batt = threading.Thread( target=get_batt )
 t_batt.setDaemon(True)
 t_batt.start()
 
-angle_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
+
+###### raise program ######
+flag_main = True
+
+calc.set_kp(*K_YPR_P)
+calc.set_kd(*K_YPR_D)
+calc.set_ki(*K_YPR_I)
+
 target_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
+throttle = 0.0
+
+angle_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
 delta_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
 delta_ypr_old = delta_ypr
 delta_ypr_delta = delta_ypr - delta_ypr_old
 delta_ypr_integrate = np.asarray([ 0, 0, 0 ], dtype = np.float32)
 control_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
 mortor_power = np.asarray([0,0,0,0], dtype = np.float16)
-throttle = 0.0
 time_delta = 0
 time_old = time.time()
+#time_start = time_old
 response = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+count = 0
 
 while ( flag_main ) :
+#while( count < 500 ) :
     #get sensor value
+    ret = spi.xfer2( [ MPUREG_INT_STATUS | READ_FLAG , 0x00 ] )
     if ( ret[1]&0x01 ) :
         response = spi.xfer2( list( READ_ALL ) )
         calc.update(*response)
-        angle_ypr[0] = calc.get_ypr_y()
-        angle_ypr[1] = calc.get_ypr_p()
-        angle_ypr[2] = calc.get_ypr_r()
-    #calculate controling
-    delta_ypr = angle_ypr - target_ypr
-    delta_ypr_delta = delta_ypr - delta_ypr_old
-    delta_ypr_integrate = delta_ypr_integrate + delta_ypr
-    now = time.time()
-    time_delta = now - time_old
-    time_old = now
-    control_ypr = ( K_YPR_P * delta_ypr + K_YPR_D * delta_ypr_delta / time_delta + K_YPR_I * delta_ypr_integrate )
-    mortor_power[0] = throttle - control_ypr[0] + control_ypr[1] + control_ypr[2] #right - flont
-    mortor_power[1] = throttle + control_ypr[0] + control_ypr[1] - control_ypr[2] # left - flont
-    mortor_power[2] = throttle - control_ypr[0] - control_ypr[1] - control_ypr[2] # left - back
-    mortor_power[3] = throttle + control_ypr[0] - control_ypr[1] + control_ypr[2] #right - back
-    #hugouga atterukaha wakaran
-    move(mortor_power)
+        #angle_ypr[0] = calc.get_ypr_y()
+        #angle_ypr[1] = calc.get_ypr_p()
+        #angle_ypr[2] = calc.get_ypr_r()
+        
+        #calculate controling
+        '''
+        delta_ypr = angle_ypr - target_ypr
+        delta_ypr_delta = delta_ypr - delta_ypr_old
+        delta_ypr_old = delta_ypr
+        delta_ypr_integrate = delta_ypr_integrate + delta_ypr
+        now = time.time()
+        time_delta = now - time_old
+        time_old = now
+        control_ypr = ( K_YPR_P * delta_ypr + K_YPR_D * delta_ypr_delta / time_delta + K_YPR_I * delta_ypr_integrate )
+        mortor_power[0] = throttle - control_ypr[0] + control_ypr[1] + control_ypr[2] #right - flont
+        mortor_power[1] = throttle + control_ypr[0] + control_ypr[1] - control_ypr[2] # left - flont
+        mortor_power[2] = throttle - control_ypr[0] - control_ypr[1] - control_ypr[2] # left - back
+        mortor_power[3] = throttle + control_ypr[0] - control_ypr[1] + control_ypr[2] #right - back
+        '''
+        calc.control(throttle, *target_ypr)
+        mortor_power[0] = calc.get_m_power(0)
+        mortor_power[1] = calc.get_m_power(1)
+        mortor_power[2] = calc.get_m_power(2)
+        mortor_power[3] = calc.get_m_power(3)
+        move(mortor_power)
+        #count = count + 1
+    #if ( count > 99 ) :
+    #    count = 0
+    #    print ( "YPR:{0[0]:.3},{0[1]:.3},{0[2]:.3}".format(angle_ypr) )
+    #    print ( "Power:{0[0]:.3},{0[1]:.3},{0[2]:.3},{0[3]:.3}".format(mortor_power) )
 
 ###### cleanup process ######
+#end = time.time() - time_start
+#print ( "Time,{0}".format(end) )
 pwm.cleanup()
 print ( "End Process" )

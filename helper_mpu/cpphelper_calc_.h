@@ -15,24 +15,26 @@ namespace n_cpphelper_calc{
     public:
         cpphelper_calc() ;
         ~cpphelper_calc(){
-            syslog(LOG_INFO, "cpphelper terminated\r\n") ;
+            syslog(LOG_DEBUG, "cpphelper terminated\r\n") ;
             closelog() ;
         }
         void update( unsigned char d1, unsigned char d2, unsigned char d3, unsigned char d4, unsigned char d5, unsigned char d6,
                      unsigned char d7, unsigned char d8, unsigned char d9, unsigned char d10, unsigned char d11, unsigned char d12, unsigned char d13, unsigned char d14  ) ;
+        void control(float _throttle, float _target_y, float _target_p, float _target_r) ;//new
         void set_bias_a(float _bx, float _by, float _bz) ;
         void set_bias_g(float _bx, float _by, float _bz) ;
         float get_q(int _qi) ;
         float get_a(int _i) ;
         float get_g(int _i) ;
+        float get_ypr(int _i) ; //new
+        float get_m_power(int _i) ; //new
+        void set_kp(float _y, float _p, float _r) ;//new
+        void set_kd(float _y, float _p, float _r) ;//new
+        void set_ki(float _y, float _p, float _r) ;//new
         float get_ypr_y() ;
         float get_ypr_p() ;
         float get_ypr_r() ;
-        float get_deltat() ;
-        //future release
-        //void set_kp(float, float, float) ;
-        //void set_kd(float, float, float) ;
-        //void set_ki(float, float, float) ;
+        //float get_deltat() ; // delete
         
     private :
         float a_x, a_y, a_z; // accelerometer measurements
@@ -40,9 +42,12 @@ namespace n_cpphelper_calc{
         float SEq_1, SEq_2, SEq_3, SEq_4; 
         float angle_ypr[3] ;
         float bias_a[3], bias_g[3] ;
-        bool flag_first;
-        struct timeval n, o ;
-        float deltat ;
+        float kp_ypr[3], kd_ypr[3], ki_ypr[3] ;
+        bool flag_first, flag_first_m;
+        struct timeval n, o, n_m, o_m ;
+        float mortor_power[4], control_ypr[3] ;
+        float delta_ypr[3], delta_ypr_delta[3], delta_ypr_old[3], delta_ypr_integrate[3] ;
+        //float deltat ;
         const float beta ;
     };
 }

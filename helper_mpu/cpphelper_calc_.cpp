@@ -15,12 +15,23 @@ cpphelper_calc::cpphelper_calc():beta( sqrt(3.0f / 4.0f) * M_PI * 5.0f / 180.0f 
         angle_ypr[i] = 0.0f ;
         bias_a[i] = 0.0f ;
         bias_g[i] = 0.0f ;
+        kp_ypr[i] = 0.0f ;
+        kd_ypr[i] = 0.0f ;
+        ki_ypr[i] = 0.0f ;
+        delta_ypr[i] = 0.0f ;
+        delta_ypr_delta[i] = 0.0f ;
+        delta_ypr_old[i] = 0.0f ;
+        delta_ypr_integrate[i] = 0.0f ;
+        control_ypr[i] = 0.0f ;
+    }
+    for ( int i = 0 ; i < 4 ; i++ ){
+        mortor_power[i] = 0.0f ;
     }
     flag_first = 0 ;
-    deltat = 0.0f ;
+    flag_first_m = 0 ;
     //debug for syslog
     openlog("syslog_cpphelper",LOG_CONS | LOG_PID, LOG_LOCAL1) ;
-    syslog(LOG_INFO, "cpphelper initialize\r\n") ;
+    syslog(LOG_DEBUG, "cpphelper initialize\r\n") ;
     return ;
 }
 
@@ -58,7 +69,7 @@ void cpphelper_calc::update(    unsigned char d1, unsigned char d2, unsigned cha
     float twoSEq_1 = 2.0f * SEq_1;
     float twoSEq_2 = 2.0f * SEq_2;
     float twoSEq_3 = 2.0f * SEq_3;
-    //float deltat;
+    float deltat;
     
     if ( flag_first == 0 ){
         flag_first = 1 ;
@@ -118,6 +129,42 @@ void cpphelper_calc::update(    unsigned char d1, unsigned char d2, unsigned cha
     return ;
 }
 
+void cpphelper_calc::control(float _throttle, float _target_y, float _target_p, float _target_r){
+    float target_ypr[3] = { _target_y, _target_p, _target_r } ;
+    float time_delta ;
+    
+    for ( int i = 0 ; i < 3 ; i++ ) {
+        delta_ypr[i] = angle_ypr[i] - target_ypr[i] ;
+        delta_ypr_delta[i] = delta_ypr[i] - delta_ypr_old[i] ;
+        delta_ypr_old[i] = delta_ypr[i] ;
+        delta_ypr_integrate[i] += delta_ypr[i] ;
+    }
+    
+    if ( flag_first_m == 0 ){
+        flag_first_m = 1 ;
+        gettimeofday(&o_m, NULL) ;
+    }
+    
+    gettimeofday(&n_m, NULL) ;
+    time_delta = (n_m.tv_sec - o_m.tv_sec) + (n_m.tv_usec - o_m.tv_usec)/1000000.0f ;
+    gettimeofday(&o_m, NULL) ;
+    
+    for ( int i = 0 ; i < 3 ; i++ ){
+        control_ypr[i] = kp_ypr[i] * delta_ypr[i] + kd_ypr[i] * delta_ypr_delta[i] / time_delta + ki_ypr[i] * delta_ypr_integrate[i] ;
+    }
+    mortor_power[0] = _throttle - control_ypr[0] + control_ypr[1] + control_ypr[2] ; //right - flont
+    mortor_power[1] = _throttle + control_ypr[0] + control_ypr[1] - control_ypr[2] ; // left - flont
+    mortor_power[2] = _throttle - control_ypr[0] - control_ypr[1] - control_ypr[2] ; // left - back
+    mortor_power[3] = _throttle + control_ypr[0] - control_ypr[1] + control_ypr[2] ; //right - back
+}
+
+float cpphelper_calc::get_m_power(int _i){
+    if ( ( _i >= 0 ) && ( _i < 4 ) ) {
+        return mortor_power[_i] ;
+    }
+    return 0 ;
+}
+
 void cpphelper_calc::set_bias_a(float _bx, float _by, float _bz){
     bias_a[0] = _bx ;
     bias_a[1] = _by ;
@@ -144,6 +191,13 @@ float cpphelper_calc::get_q(int _qi){
     } else {
         return 0 ;
     }
+}
+
+float cpphelper_calc::get_ypr(int _i){
+    if ( ( _i >= 0 ) && ( _i < 3 ) ){
+        return angle_ypr[_i] ;
+    }
+    return 0 ;
 }
 
 float cpphelper_calc::get_ypr_y(){
@@ -182,8 +236,25 @@ float cpphelper_calc::get_g(int _i){
     }
 }
 
-float cpphelper_calc::get_deltat(){
-    return deltat ;
+void cpphelper_calc::set_kp(float _y, float _p, float _r){
+    kp_ypr[0] = _y ;
+    kp_ypr[1] = _p ;
+    kp_ypr[2] = _r ;
+    return ;
 }
+void cpphelper_calc::set_kd(float _y, float _p, float _r){
+    kd_ypr[0] = _y ;
+    kd_ypr[1] = _p ;
+    kd_ypr[2] = _r ;
+    return ;
+}
+void cpphelper_calc::set_ki(float _y, float _p, float _r){
+    ki_ypr[0] = _y ;
+    ki_ypr[1] = _p ;
+    ki_ypr[2] = _r ;
+    return ;
+}
+
+
 
 } //namespace n_cpphelper_calc

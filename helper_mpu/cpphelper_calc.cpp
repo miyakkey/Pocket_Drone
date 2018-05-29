@@ -664,7 +664,7 @@ static const char *__pyx_f[] = {
 /*--- Type declarations ---*/
 struct __pyx_obj_14cpphelper_calc_CalcHelper;
 
-/* "cpphelper_calc.pyx":22
+/* "cpphelper_calc.pyx":27
  * 
  * 
  * cdef class CalcHelper(object) :             # <<<<<<<<<<<<<<
@@ -842,6 +842,9 @@ static PyTypeObject *__pyx_ptype_14cpphelper_calc_CalcHelper = 0;
 int __pyx_module_is_main_cpphelper_calc = 0;
 
 /* Implementation of 'cpphelper_calc' */
+static const char __pyx_k_p[] = "_p";
+static const char __pyx_k_r[] = "_r";
+static const char __pyx_k_y[] = "_y";
 static const char __pyx_k_bx[] = "_bx";
 static const char __pyx_k_by[] = "_by";
 static const char __pyx_k_bz[] = "_bz";
@@ -862,6 +865,10 @@ static const char __pyx_k_d13[] = "d13";
 static const char __pyx_k_d14[] = "d14";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_test[] = "__test__";
+static const char __pyx_k_target_p[] = "_target_p";
+static const char __pyx_k_target_r[] = "_target_r";
+static const char __pyx_k_target_y[] = "_target_y";
+static const char __pyx_k_throttle[] = "_throttle";
 static PyObject *__pyx_n_s_bx;
 static PyObject *__pyx_n_s_by;
 static PyObject *__pyx_n_s_bz;
@@ -881,22 +888,34 @@ static PyObject *__pyx_n_s_d7;
 static PyObject *__pyx_n_s_d8;
 static PyObject *__pyx_n_s_d9;
 static PyObject *__pyx_n_s_main;
+static PyObject *__pyx_n_s_p;
+static PyObject *__pyx_n_s_r;
+static PyObject *__pyx_n_s_target_p;
+static PyObject *__pyx_n_s_target_r;
+static PyObject *__pyx_n_s_target_y;
 static PyObject *__pyx_n_s_test;
+static PyObject *__pyx_n_s_throttle;
+static PyObject *__pyx_n_s_y;
 static int __pyx_pf_14cpphelper_calc_10CalcHelper___cinit__(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self); /* proto */
 static void __pyx_pf_14cpphelper_calc_10CalcHelper_2__dealloc__(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_4update(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, CYTHON_UNUSED unsigned char __pyx_v_d0, unsigned char __pyx_v_d1, unsigned char __pyx_v_d2, unsigned char __pyx_v_d3, unsigned char __pyx_v_d4, unsigned char __pyx_v_d5, unsigned char __pyx_v_d6, unsigned char __pyx_v_d7, unsigned char __pyx_v_d8, unsigned char __pyx_v_d9, unsigned char __pyx_v_d10, unsigned char __pyx_v_d11, unsigned char __pyx_v_d12, unsigned char __pyx_v_d13, unsigned char __pyx_v_d14); /* proto */
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_6set_bias_a(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__bx, float __pyx_v__by, float __pyx_v__bz); /* proto */
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_8set_bias_g(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__bx, float __pyx_v__by, float __pyx_v__bz); /* proto */
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_10get_q(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__qi); /* proto */
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_12get_ypr_y(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_14get_ypr_p(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_16get_ypr_r(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_18get_a(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__i); /* proto */
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_20get_g(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__i); /* proto */
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_22get_deltat(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_6control(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__throttle, float __pyx_v__target_y, float __pyx_v__target_p, float __pyx_v__target_r); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_8set_bias_a(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__bx, float __pyx_v__by, float __pyx_v__bz); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_10set_bias_g(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__bx, float __pyx_v__by, float __pyx_v__bz); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_12get_q(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__qi); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_14get_ypr_y(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_16get_ypr_p(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_18get_ypr_r(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_20get_a(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__i); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_22get_g(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__i); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_24get_ypr(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__i); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_26get_m_power(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__i); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_28set_kp(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__y, float __pyx_v__p, float __pyx_v__r); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_30set_kd(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__y, float __pyx_v__p, float __pyx_v__r); /* proto */
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_32set_ki(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__y, float __pyx_v__p, float __pyx_v__r); /* proto */
 static PyObject *__pyx_tp_new_14cpphelper_calc_CalcHelper(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 
-/* "cpphelper_calc.pyx":25
+/* "cpphelper_calc.pyx":30
  *     cdef cpphelper_calc* thisptr
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -926,7 +945,7 @@ static int __pyx_pf_14cpphelper_calc_10CalcHelper___cinit__(struct __pyx_obj_14c
   n_cpphelper_calc::cpphelper_calc *__pyx_t_1;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "cpphelper_calc.pyx":26
+  /* "cpphelper_calc.pyx":31
  * 
  *     def __cinit__(self):
  *         self.thisptr = new cpphelper_calc()             # <<<<<<<<<<<<<<
@@ -937,11 +956,11 @@ static int __pyx_pf_14cpphelper_calc_10CalcHelper___cinit__(struct __pyx_obj_14c
     __pyx_t_1 = new n_cpphelper_calc::cpphelper_calc();
   } catch(...) {
     __Pyx_CppExn2PyErr();
-    __PYX_ERR(0, 26, __pyx_L1_error)
+    __PYX_ERR(0, 31, __pyx_L1_error)
   }
   __pyx_v_self->thisptr = __pyx_t_1;
 
-  /* "cpphelper_calc.pyx":25
+  /* "cpphelper_calc.pyx":30
  *     cdef cpphelper_calc* thisptr
  * 
  *     def __cinit__(self):             # <<<<<<<<<<<<<<
@@ -960,7 +979,7 @@ static int __pyx_pf_14cpphelper_calc_10CalcHelper___cinit__(struct __pyx_obj_14c
   return __pyx_r;
 }
 
-/* "cpphelper_calc.pyx":28
+/* "cpphelper_calc.pyx":33
  *         self.thisptr = new cpphelper_calc()
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -983,7 +1002,7 @@ static void __pyx_pf_14cpphelper_calc_10CalcHelper_2__dealloc__(struct __pyx_obj
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__dealloc__", 0);
 
-  /* "cpphelper_calc.pyx":29
+  /* "cpphelper_calc.pyx":34
  * 
  *     def __dealloc__(self):
  *         del self.thisptr             # <<<<<<<<<<<<<<
@@ -992,7 +1011,7 @@ static void __pyx_pf_14cpphelper_calc_10CalcHelper_2__dealloc__(struct __pyx_obj
  */
   delete __pyx_v_self->thisptr;
 
-  /* "cpphelper_calc.pyx":28
+  /* "cpphelper_calc.pyx":33
  *         self.thisptr = new cpphelper_calc()
  * 
  *     def __dealloc__(self):             # <<<<<<<<<<<<<<
@@ -1004,7 +1023,7 @@ static void __pyx_pf_14cpphelper_calc_10CalcHelper_2__dealloc__(struct __pyx_obj
   __Pyx_RefNannyFinishContext();
 }
 
-/* "cpphelper_calc.pyx":31
+/* "cpphelper_calc.pyx":36
  *         del self.thisptr
  * 
  *     def update(self, unsigned char d0, unsigned char d1, unsigned char d2, unsigned char d3, unsigned char d4, unsigned char d5, unsigned char d6, unsigned char d7, unsigned char d8,             # <<<<<<<<<<<<<<
@@ -1066,76 +1085,76 @@ static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_5update(PyObject *__pyx_
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d1)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 1); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 1); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d2)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 2); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 2); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case  3:
         if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d3)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 3); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 3); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case  4:
         if (likely((values[4] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d4)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 4); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 4); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case  5:
         if (likely((values[5] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d5)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 5); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 5); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case  6:
         if (likely((values[6] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d6)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 6); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 6); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case  7:
         if (likely((values[7] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d7)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 7); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 7); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case  8:
         if (likely((values[8] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d8)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 8); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 8); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case  9:
         if (likely((values[9] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d9)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 9); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 9); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case 10:
         if (likely((values[10] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d10)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 10); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 10); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case 11:
         if (likely((values[11] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d11)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 11); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 11); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case 12:
         if (likely((values[12] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d12)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 12); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 12); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case 13:
         if (likely((values[13] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d13)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 13); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 13); __PYX_ERR(0, 36, __pyx_L3_error)
         }
         case 14:
         if (likely((values[14] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_d14)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 14); __PYX_ERR(0, 31, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, 14); __PYX_ERR(0, 36, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "update") < 0)) __PYX_ERR(0, 31, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "update") < 0)) __PYX_ERR(0, 36, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 15) {
       goto __pyx_L5_argtuple_error;
@@ -1156,25 +1175,25 @@ static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_5update(PyObject *__pyx_
       values[13] = PyTuple_GET_ITEM(__pyx_args, 13);
       values[14] = PyTuple_GET_ITEM(__pyx_args, 14);
     }
-    __pyx_v_d0 = __Pyx_PyInt_As_unsigned_char(values[0]); if (unlikely((__pyx_v_d0 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 31, __pyx_L3_error)
-    __pyx_v_d1 = __Pyx_PyInt_As_unsigned_char(values[1]); if (unlikely((__pyx_v_d1 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 31, __pyx_L3_error)
-    __pyx_v_d2 = __Pyx_PyInt_As_unsigned_char(values[2]); if (unlikely((__pyx_v_d2 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 31, __pyx_L3_error)
-    __pyx_v_d3 = __Pyx_PyInt_As_unsigned_char(values[3]); if (unlikely((__pyx_v_d3 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 31, __pyx_L3_error)
-    __pyx_v_d4 = __Pyx_PyInt_As_unsigned_char(values[4]); if (unlikely((__pyx_v_d4 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 31, __pyx_L3_error)
-    __pyx_v_d5 = __Pyx_PyInt_As_unsigned_char(values[5]); if (unlikely((__pyx_v_d5 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 31, __pyx_L3_error)
-    __pyx_v_d6 = __Pyx_PyInt_As_unsigned_char(values[6]); if (unlikely((__pyx_v_d6 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 31, __pyx_L3_error)
-    __pyx_v_d7 = __Pyx_PyInt_As_unsigned_char(values[7]); if (unlikely((__pyx_v_d7 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 31, __pyx_L3_error)
-    __pyx_v_d8 = __Pyx_PyInt_As_unsigned_char(values[8]); if (unlikely((__pyx_v_d8 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 31, __pyx_L3_error)
-    __pyx_v_d9 = __Pyx_PyInt_As_unsigned_char(values[9]); if (unlikely((__pyx_v_d9 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
-    __pyx_v_d10 = __Pyx_PyInt_As_unsigned_char(values[10]); if (unlikely((__pyx_v_d10 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
-    __pyx_v_d11 = __Pyx_PyInt_As_unsigned_char(values[11]); if (unlikely((__pyx_v_d11 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
-    __pyx_v_d12 = __Pyx_PyInt_As_unsigned_char(values[12]); if (unlikely((__pyx_v_d12 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
-    __pyx_v_d13 = __Pyx_PyInt_As_unsigned_char(values[13]); if (unlikely((__pyx_v_d13 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
-    __pyx_v_d14 = __Pyx_PyInt_As_unsigned_char(values[14]); if (unlikely((__pyx_v_d14 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 32, __pyx_L3_error)
+    __pyx_v_d0 = __Pyx_PyInt_As_unsigned_char(values[0]); if (unlikely((__pyx_v_d0 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 36, __pyx_L3_error)
+    __pyx_v_d1 = __Pyx_PyInt_As_unsigned_char(values[1]); if (unlikely((__pyx_v_d1 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 36, __pyx_L3_error)
+    __pyx_v_d2 = __Pyx_PyInt_As_unsigned_char(values[2]); if (unlikely((__pyx_v_d2 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 36, __pyx_L3_error)
+    __pyx_v_d3 = __Pyx_PyInt_As_unsigned_char(values[3]); if (unlikely((__pyx_v_d3 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 36, __pyx_L3_error)
+    __pyx_v_d4 = __Pyx_PyInt_As_unsigned_char(values[4]); if (unlikely((__pyx_v_d4 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 36, __pyx_L3_error)
+    __pyx_v_d5 = __Pyx_PyInt_As_unsigned_char(values[5]); if (unlikely((__pyx_v_d5 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 36, __pyx_L3_error)
+    __pyx_v_d6 = __Pyx_PyInt_As_unsigned_char(values[6]); if (unlikely((__pyx_v_d6 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 36, __pyx_L3_error)
+    __pyx_v_d7 = __Pyx_PyInt_As_unsigned_char(values[7]); if (unlikely((__pyx_v_d7 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 36, __pyx_L3_error)
+    __pyx_v_d8 = __Pyx_PyInt_As_unsigned_char(values[8]); if (unlikely((__pyx_v_d8 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 36, __pyx_L3_error)
+    __pyx_v_d9 = __Pyx_PyInt_As_unsigned_char(values[9]); if (unlikely((__pyx_v_d9 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 37, __pyx_L3_error)
+    __pyx_v_d10 = __Pyx_PyInt_As_unsigned_char(values[10]); if (unlikely((__pyx_v_d10 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 37, __pyx_L3_error)
+    __pyx_v_d11 = __Pyx_PyInt_As_unsigned_char(values[11]); if (unlikely((__pyx_v_d11 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 37, __pyx_L3_error)
+    __pyx_v_d12 = __Pyx_PyInt_As_unsigned_char(values[12]); if (unlikely((__pyx_v_d12 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 37, __pyx_L3_error)
+    __pyx_v_d13 = __Pyx_PyInt_As_unsigned_char(values[13]); if (unlikely((__pyx_v_d13 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 37, __pyx_L3_error)
+    __pyx_v_d14 = __Pyx_PyInt_As_unsigned_char(values[14]); if (unlikely((__pyx_v_d14 == (unsigned char)-1) && PyErr_Occurred())) __PYX_ERR(0, 37, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 31, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("update", 1, 15, 15, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 36, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("cpphelper_calc.CalcHelper.update", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -1192,16 +1211,16 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_4update(struct __pyx_obj
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("update", 0);
 
-  /* "cpphelper_calc.pyx":33
+  /* "cpphelper_calc.pyx":38
  *     def update(self, unsigned char d0, unsigned char d1, unsigned char d2, unsigned char d3, unsigned char d4, unsigned char d5, unsigned char d6, unsigned char d7, unsigned char d8,
  *                  unsigned char d9, unsigned char d10, unsigned char d11, unsigned char d12, unsigned char d13, unsigned char d14) :
  *         self.thisptr.update(d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14)             # <<<<<<<<<<<<<<
  * 
- *     def set_bias_a(self, float _bx, float _by, float _bz):
+ *     def control(self, float _throttle, float _target_y, float _target_p, float _target_r) :
  */
   __pyx_v_self->thisptr->update(__pyx_v_d1, __pyx_v_d2, __pyx_v_d3, __pyx_v_d4, __pyx_v_d5, __pyx_v_d6, __pyx_v_d7, __pyx_v_d8, __pyx_v_d9, __pyx_v_d10, __pyx_v_d11, __pyx_v_d12, __pyx_v_d13, __pyx_v_d14);
 
-  /* "cpphelper_calc.pyx":31
+  /* "cpphelper_calc.pyx":36
  *         del self.thisptr
  * 
  *     def update(self, unsigned char d0, unsigned char d1, unsigned char d2, unsigned char d3, unsigned char d4, unsigned char d5, unsigned char d6, unsigned char d7, unsigned char d8,             # <<<<<<<<<<<<<<
@@ -1216,8 +1235,121 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_4update(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "cpphelper_calc.pyx":35
+/* "cpphelper_calc.pyx":40
  *         self.thisptr.update(d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14)
+ * 
+ *     def control(self, float _throttle, float _target_y, float _target_p, float _target_r) :             # <<<<<<<<<<<<<<
+ *         self.thisptr.control(_throttle, _target_y, _target_p, _target_r)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_7control(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_7control(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  float __pyx_v__throttle;
+  float __pyx_v__target_y;
+  float __pyx_v__target_p;
+  float __pyx_v__target_r;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("control (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_throttle,&__pyx_n_s_target_y,&__pyx_n_s_target_p,&__pyx_n_s_target_r,0};
+    PyObject* values[4] = {0,0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_throttle)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_target_y)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("control", 1, 4, 4, 1); __PYX_ERR(0, 40, __pyx_L3_error)
+        }
+        case  2:
+        if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_target_p)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("control", 1, 4, 4, 2); __PYX_ERR(0, 40, __pyx_L3_error)
+        }
+        case  3:
+        if (likely((values[3] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_target_r)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("control", 1, 4, 4, 3); __PYX_ERR(0, 40, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "control") < 0)) __PYX_ERR(0, 40, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+    }
+    __pyx_v__throttle = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v__throttle == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L3_error)
+    __pyx_v__target_y = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v__target_y == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L3_error)
+    __pyx_v__target_p = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v__target_p == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L3_error)
+    __pyx_v__target_r = __pyx_PyFloat_AsFloat(values[3]); if (unlikely((__pyx_v__target_r == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("control", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 40, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cpphelper_calc.CalcHelper.control", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_6control(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), __pyx_v__throttle, __pyx_v__target_y, __pyx_v__target_p, __pyx_v__target_r);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_6control(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__throttle, float __pyx_v__target_y, float __pyx_v__target_p, float __pyx_v__target_r) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("control", 0);
+
+  /* "cpphelper_calc.pyx":41
+ * 
+ *     def control(self, float _throttle, float _target_y, float _target_p, float _target_r) :
+ *         self.thisptr.control(_throttle, _target_y, _target_p, _target_r)             # <<<<<<<<<<<<<<
+ * 
+ *     def set_bias_a(self, float _bx, float _by, float _bz):
+ */
+  __pyx_v_self->thisptr->control(__pyx_v__throttle, __pyx_v__target_y, __pyx_v__target_p, __pyx_v__target_r);
+
+  /* "cpphelper_calc.pyx":40
+ *         self.thisptr.update(d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14)
+ * 
+ *     def control(self, float _throttle, float _target_y, float _target_p, float _target_r) :             # <<<<<<<<<<<<<<
+ *         self.thisptr.control(_throttle, _target_y, _target_p, _target_r)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "cpphelper_calc.pyx":43
+ *         self.thisptr.control(_throttle, _target_y, _target_p, _target_r)
  * 
  *     def set_bias_a(self, float _bx, float _by, float _bz):             # <<<<<<<<<<<<<<
  *         self.thisptr.set_bias_a(_bx, _by, _bz)
@@ -1225,8 +1357,8 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_4update(struct __pyx_obj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_7set_bias_a(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_7set_bias_a(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_9set_bias_a(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_9set_bias_a(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   float __pyx_v__bx;
   float __pyx_v__by;
   float __pyx_v__bz;
@@ -1254,16 +1386,16 @@ static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_7set_bias_a(PyObject *__
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_by)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("set_bias_a", 1, 3, 3, 1); __PYX_ERR(0, 35, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("set_bias_a", 1, 3, 3, 1); __PYX_ERR(0, 43, __pyx_L3_error)
         }
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_bz)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("set_bias_a", 1, 3, 3, 2); __PYX_ERR(0, 35, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("set_bias_a", 1, 3, 3, 2); __PYX_ERR(0, 43, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "set_bias_a") < 0)) __PYX_ERR(0, 35, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "set_bias_a") < 0)) __PYX_ERR(0, 43, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -1272,31 +1404,31 @@ static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_7set_bias_a(PyObject *__
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
     }
-    __pyx_v__bx = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v__bx == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 35, __pyx_L3_error)
-    __pyx_v__by = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v__by == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 35, __pyx_L3_error)
-    __pyx_v__bz = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v__bz == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 35, __pyx_L3_error)
+    __pyx_v__bx = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v__bx == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 43, __pyx_L3_error)
+    __pyx_v__by = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v__by == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 43, __pyx_L3_error)
+    __pyx_v__bz = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v__bz == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 43, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("set_bias_a", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 35, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("set_bias_a", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 43, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("cpphelper_calc.CalcHelper.set_bias_a", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_6set_bias_a(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), __pyx_v__bx, __pyx_v__by, __pyx_v__bz);
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_8set_bias_a(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), __pyx_v__bx, __pyx_v__by, __pyx_v__bz);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_6set_bias_a(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__bx, float __pyx_v__by, float __pyx_v__bz) {
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_8set_bias_a(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__bx, float __pyx_v__by, float __pyx_v__bz) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("set_bias_a", 0);
 
-  /* "cpphelper_calc.pyx":36
+  /* "cpphelper_calc.pyx":44
  * 
  *     def set_bias_a(self, float _bx, float _by, float _bz):
  *         self.thisptr.set_bias_a(_bx, _by, _bz)             # <<<<<<<<<<<<<<
@@ -1305,8 +1437,8 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_6set_bias_a(struct __pyx
  */
   __pyx_v_self->thisptr->set_bias_a(__pyx_v__bx, __pyx_v__by, __pyx_v__bz);
 
-  /* "cpphelper_calc.pyx":35
- *         self.thisptr.update(d1, d2, d3, d4, d5, d6, d7, d8, d9, d10, d11, d12, d13, d14)
+  /* "cpphelper_calc.pyx":43
+ *         self.thisptr.control(_throttle, _target_y, _target_p, _target_r)
  * 
  *     def set_bias_a(self, float _bx, float _by, float _bz):             # <<<<<<<<<<<<<<
  *         self.thisptr.set_bias_a(_bx, _by, _bz)
@@ -1320,7 +1452,7 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_6set_bias_a(struct __pyx
   return __pyx_r;
 }
 
-/* "cpphelper_calc.pyx":38
+/* "cpphelper_calc.pyx":46
  *         self.thisptr.set_bias_a(_bx, _by, _bz)
  * 
  *     def set_bias_g(self, float _bx, float _by, float _bz):             # <<<<<<<<<<<<<<
@@ -1329,8 +1461,8 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_6set_bias_a(struct __pyx
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_9set_bias_g(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_9set_bias_g(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_11set_bias_g(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_11set_bias_g(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   float __pyx_v__bx;
   float __pyx_v__by;
   float __pyx_v__bz;
@@ -1358,16 +1490,16 @@ static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_9set_bias_g(PyObject *__
         case  1:
         if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_by)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("set_bias_g", 1, 3, 3, 1); __PYX_ERR(0, 38, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("set_bias_g", 1, 3, 3, 1); __PYX_ERR(0, 46, __pyx_L3_error)
         }
         case  2:
         if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_bz)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("set_bias_g", 1, 3, 3, 2); __PYX_ERR(0, 38, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("set_bias_g", 1, 3, 3, 2); __PYX_ERR(0, 46, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "set_bias_g") < 0)) __PYX_ERR(0, 38, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "set_bias_g") < 0)) __PYX_ERR(0, 46, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -1376,31 +1508,31 @@ static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_9set_bias_g(PyObject *__
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
     }
-    __pyx_v__bx = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v__bx == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 38, __pyx_L3_error)
-    __pyx_v__by = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v__by == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 38, __pyx_L3_error)
-    __pyx_v__bz = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v__bz == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 38, __pyx_L3_error)
+    __pyx_v__bx = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v__bx == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
+    __pyx_v__by = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v__by == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
+    __pyx_v__bz = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v__bz == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 46, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("set_bias_g", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 38, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("set_bias_g", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 46, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("cpphelper_calc.CalcHelper.set_bias_g", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_8set_bias_g(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), __pyx_v__bx, __pyx_v__by, __pyx_v__bz);
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_10set_bias_g(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), __pyx_v__bx, __pyx_v__by, __pyx_v__bz);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_8set_bias_g(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__bx, float __pyx_v__by, float __pyx_v__bz) {
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_10set_bias_g(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__bx, float __pyx_v__by, float __pyx_v__bz) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("set_bias_g", 0);
 
-  /* "cpphelper_calc.pyx":39
+  /* "cpphelper_calc.pyx":47
  * 
  *     def set_bias_g(self, float _bx, float _by, float _bz):
  *         self.thisptr.set_bias_g(_bx, _by, _bz)             # <<<<<<<<<<<<<<
@@ -1409,7 +1541,7 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_8set_bias_g(struct __pyx
  */
   __pyx_v_self->thisptr->set_bias_g(__pyx_v__bx, __pyx_v__by, __pyx_v__bz);
 
-  /* "cpphelper_calc.pyx":38
+  /* "cpphelper_calc.pyx":46
  *         self.thisptr.set_bias_a(_bx, _by, _bz)
  * 
  *     def set_bias_g(self, float _bx, float _by, float _bz):             # <<<<<<<<<<<<<<
@@ -1424,7 +1556,7 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_8set_bias_g(struct __pyx
   return __pyx_r;
 }
 
-/* "cpphelper_calc.pyx":41
+/* "cpphelper_calc.pyx":49
  *         self.thisptr.set_bias_g(_bx, _by, _bz)
  * 
  *     def get_q(self, int _qi):             # <<<<<<<<<<<<<<
@@ -1433,14 +1565,14 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_8set_bias_g(struct __pyx
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_11get_q(PyObject *__pyx_v_self, PyObject *__pyx_arg__qi); /*proto*/
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_11get_q(PyObject *__pyx_v_self, PyObject *__pyx_arg__qi) {
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_13get_q(PyObject *__pyx_v_self, PyObject *__pyx_arg__qi); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_13get_q(PyObject *__pyx_v_self, PyObject *__pyx_arg__qi) {
   int __pyx_v__qi;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_q (wrapper)", 0);
   assert(__pyx_arg__qi); {
-    __pyx_v__qi = __Pyx_PyInt_As_int(__pyx_arg__qi); if (unlikely((__pyx_v__qi == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 41, __pyx_L3_error)
+    __pyx_v__qi = __Pyx_PyInt_As_int(__pyx_arg__qi); if (unlikely((__pyx_v__qi == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -1448,20 +1580,20 @@ static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_11get_q(PyObject *__pyx_
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_10get_q(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), ((int)__pyx_v__qi));
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_12get_q(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), ((int)__pyx_v__qi));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_10get_q(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__qi) {
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_12get_q(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__qi) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_q", 0);
 
-  /* "cpphelper_calc.pyx":42
+  /* "cpphelper_calc.pyx":50
  * 
  *     def get_q(self, int _qi):
  *         return self.thisptr.get_q(_qi)             # <<<<<<<<<<<<<<
@@ -1469,13 +1601,13 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_10get_q(struct __pyx_obj
  *     def get_ypr_y(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_q(__pyx_v__qi)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_q(__pyx_v__qi)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 50, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "cpphelper_calc.pyx":41
+  /* "cpphelper_calc.pyx":49
  *         self.thisptr.set_bias_g(_bx, _by, _bz)
  * 
  *     def get_q(self, int _qi):             # <<<<<<<<<<<<<<
@@ -1494,7 +1626,7 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_10get_q(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "cpphelper_calc.pyx":44
+/* "cpphelper_calc.pyx":52
  *         return self.thisptr.get_q(_qi)
  * 
  *     def get_ypr_y(self):             # <<<<<<<<<<<<<<
@@ -1503,25 +1635,25 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_10get_q(struct __pyx_obj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_13get_ypr_y(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_13get_ypr_y(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_15get_ypr_y(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_15get_ypr_y(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_ypr_y (wrapper)", 0);
-  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_12get_ypr_y(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_14get_ypr_y(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_12get_ypr_y(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self) {
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_14get_ypr_y(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_ypr_y", 0);
 
-  /* "cpphelper_calc.pyx":45
+  /* "cpphelper_calc.pyx":53
  * 
  *     def get_ypr_y(self):
  *         return self.thisptr.get_ypr_y()             # <<<<<<<<<<<<<<
@@ -1529,13 +1661,13 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_12get_ypr_y(struct __pyx
  *     def get_ypr_p(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_ypr_y()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 45, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_ypr_y()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "cpphelper_calc.pyx":44
+  /* "cpphelper_calc.pyx":52
  *         return self.thisptr.get_q(_qi)
  * 
  *     def get_ypr_y(self):             # <<<<<<<<<<<<<<
@@ -1554,7 +1686,7 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_12get_ypr_y(struct __pyx
   return __pyx_r;
 }
 
-/* "cpphelper_calc.pyx":47
+/* "cpphelper_calc.pyx":55
  *         return self.thisptr.get_ypr_y()
  * 
  *     def get_ypr_p(self):             # <<<<<<<<<<<<<<
@@ -1563,25 +1695,25 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_12get_ypr_y(struct __pyx
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_15get_ypr_p(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_15get_ypr_p(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_17get_ypr_p(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_17get_ypr_p(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_ypr_p (wrapper)", 0);
-  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_14get_ypr_p(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_16get_ypr_p(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_14get_ypr_p(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self) {
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_16get_ypr_p(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_ypr_p", 0);
 
-  /* "cpphelper_calc.pyx":48
+  /* "cpphelper_calc.pyx":56
  * 
  *     def get_ypr_p(self):
  *         return self.thisptr.get_ypr_p()             # <<<<<<<<<<<<<<
@@ -1589,13 +1721,13 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_14get_ypr_p(struct __pyx
  *     def get_ypr_r(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_ypr_p()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_ypr_p()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "cpphelper_calc.pyx":47
+  /* "cpphelper_calc.pyx":55
  *         return self.thisptr.get_ypr_y()
  * 
  *     def get_ypr_p(self):             # <<<<<<<<<<<<<<
@@ -1614,7 +1746,7 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_14get_ypr_p(struct __pyx
   return __pyx_r;
 }
 
-/* "cpphelper_calc.pyx":50
+/* "cpphelper_calc.pyx":58
  *         return self.thisptr.get_ypr_p()
  * 
  *     def get_ypr_r(self):             # <<<<<<<<<<<<<<
@@ -1623,25 +1755,25 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_14get_ypr_p(struct __pyx
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_17get_ypr_r(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_17get_ypr_r(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_19get_ypr_r(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_19get_ypr_r(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_ypr_r (wrapper)", 0);
-  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_16get_ypr_r(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self));
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_18get_ypr_r(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_16get_ypr_r(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self) {
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_18get_ypr_r(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_ypr_r", 0);
 
-  /* "cpphelper_calc.pyx":51
+  /* "cpphelper_calc.pyx":59
  * 
  *     def get_ypr_r(self):
  *         return self.thisptr.get_ypr_r()             # <<<<<<<<<<<<<<
@@ -1649,13 +1781,13 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_16get_ypr_r(struct __pyx
  *     def get_a(self, int _i):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_ypr_r()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_ypr_r()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "cpphelper_calc.pyx":50
+  /* "cpphelper_calc.pyx":58
  *         return self.thisptr.get_ypr_p()
  * 
  *     def get_ypr_r(self):             # <<<<<<<<<<<<<<
@@ -1674,7 +1806,7 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_16get_ypr_r(struct __pyx
   return __pyx_r;
 }
 
-/* "cpphelper_calc.pyx":53
+/* "cpphelper_calc.pyx":61
  *         return self.thisptr.get_ypr_r()
  * 
  *     def get_a(self, int _i):             # <<<<<<<<<<<<<<
@@ -1683,14 +1815,14 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_16get_ypr_r(struct __pyx
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_19get_a(PyObject *__pyx_v_self, PyObject *__pyx_arg__i); /*proto*/
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_19get_a(PyObject *__pyx_v_self, PyObject *__pyx_arg__i) {
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_21get_a(PyObject *__pyx_v_self, PyObject *__pyx_arg__i); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_21get_a(PyObject *__pyx_v_self, PyObject *__pyx_arg__i) {
   int __pyx_v__i;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_a (wrapper)", 0);
   assert(__pyx_arg__i); {
-    __pyx_v__i = __Pyx_PyInt_As_int(__pyx_arg__i); if (unlikely((__pyx_v__i == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L3_error)
+    __pyx_v__i = __Pyx_PyInt_As_int(__pyx_arg__i); if (unlikely((__pyx_v__i == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 61, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -1698,20 +1830,20 @@ static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_19get_a(PyObject *__pyx_
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_18get_a(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), ((int)__pyx_v__i));
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_20get_a(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), ((int)__pyx_v__i));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_18get_a(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__i) {
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_20get_a(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__i) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_a", 0);
 
-  /* "cpphelper_calc.pyx":54
+  /* "cpphelper_calc.pyx":62
  * 
  *     def get_a(self, int _i):
  *         return self.thisptr.get_a(_i)             # <<<<<<<<<<<<<<
@@ -1719,13 +1851,13 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_18get_a(struct __pyx_obj
  *     def get_g(self, int _i):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_a(__pyx_v__i)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 54, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_a(__pyx_v__i)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 62, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "cpphelper_calc.pyx":53
+  /* "cpphelper_calc.pyx":61
  *         return self.thisptr.get_ypr_r()
  * 
  *     def get_a(self, int _i):             # <<<<<<<<<<<<<<
@@ -1744,7 +1876,7 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_18get_a(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "cpphelper_calc.pyx":56
+/* "cpphelper_calc.pyx":64
  *         return self.thisptr.get_a(_i)
  * 
  *     def get_g(self, int _i):             # <<<<<<<<<<<<<<
@@ -1753,14 +1885,14 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_18get_a(struct __pyx_obj
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_21get_g(PyObject *__pyx_v_self, PyObject *__pyx_arg__i); /*proto*/
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_21get_g(PyObject *__pyx_v_self, PyObject *__pyx_arg__i) {
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_23get_g(PyObject *__pyx_v_self, PyObject *__pyx_arg__i); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_23get_g(PyObject *__pyx_v_self, PyObject *__pyx_arg__i) {
   int __pyx_v__i;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_g (wrapper)", 0);
   assert(__pyx_arg__i); {
-    __pyx_v__i = __Pyx_PyInt_As_int(__pyx_arg__i); if (unlikely((__pyx_v__i == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 56, __pyx_L3_error)
+    __pyx_v__i = __Pyx_PyInt_As_int(__pyx_arg__i); if (unlikely((__pyx_v__i == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 64, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -1768,34 +1900,34 @@ static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_21get_g(PyObject *__pyx_
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_20get_g(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), ((int)__pyx_v__i));
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_22get_g(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), ((int)__pyx_v__i));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_20get_g(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__i) {
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_22get_g(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__i) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_g", 0);
 
-  /* "cpphelper_calc.pyx":57
+  /* "cpphelper_calc.pyx":65
  * 
  *     def get_g(self, int _i):
  *         return self.thisptr.get_g(_i)             # <<<<<<<<<<<<<<
  * 
- *     def get_deltat(self) :
+ *     def get_ypr(self, int _i):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_g(__pyx_v__i)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 57, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_g(__pyx_v__i)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "cpphelper_calc.pyx":56
+  /* "cpphelper_calc.pyx":64
  *         return self.thisptr.get_a(_i)
  * 
  *     def get_g(self, int _i):             # <<<<<<<<<<<<<<
@@ -1814,57 +1946,449 @@ static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_20get_g(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "cpphelper_calc.pyx":59
+/* "cpphelper_calc.pyx":67
  *         return self.thisptr.get_g(_i)
  * 
- *     def get_deltat(self) :             # <<<<<<<<<<<<<<
- *         return self.thisptr.get_deltat()
+ *     def get_ypr(self, int _i):             # <<<<<<<<<<<<<<
+ *         return self.thisptr.get_ypr(_i)
+ * 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_23get_deltat(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_23get_deltat(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_25get_ypr(PyObject *__pyx_v_self, PyObject *__pyx_arg__i); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_25get_ypr(PyObject *__pyx_v_self, PyObject *__pyx_arg__i) {
+  int __pyx_v__i;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("get_deltat (wrapper)", 0);
-  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_22get_deltat(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self));
+  __Pyx_RefNannySetupContext("get_ypr (wrapper)", 0);
+  assert(__pyx_arg__i); {
+    __pyx_v__i = __Pyx_PyInt_As_int(__pyx_arg__i); if (unlikely((__pyx_v__i == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 67, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cpphelper_calc.CalcHelper.get_ypr", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_24get_ypr(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), ((int)__pyx_v__i));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_22get_deltat(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self) {
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_24get_ypr(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__i) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("get_deltat", 0);
+  __Pyx_RefNannySetupContext("get_ypr", 0);
 
-  /* "cpphelper_calc.pyx":60
+  /* "cpphelper_calc.pyx":68
  * 
- *     def get_deltat(self) :
- *         return self.thisptr.get_deltat()             # <<<<<<<<<<<<<<
+ *     def get_ypr(self, int _i):
+ *         return self.thisptr.get_ypr(_i)             # <<<<<<<<<<<<<<
+ * 
+ *     def get_m_power(self, int _i):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_deltat()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 60, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_ypr(__pyx_v__i)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "cpphelper_calc.pyx":59
+  /* "cpphelper_calc.pyx":67
  *         return self.thisptr.get_g(_i)
  * 
- *     def get_deltat(self) :             # <<<<<<<<<<<<<<
- *         return self.thisptr.get_deltat()
+ *     def get_ypr(self, int _i):             # <<<<<<<<<<<<<<
+ *         return self.thisptr.get_ypr(_i)
+ * 
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cpphelper_calc.CalcHelper.get_deltat", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cpphelper_calc.CalcHelper.get_ypr", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "cpphelper_calc.pyx":70
+ *         return self.thisptr.get_ypr(_i)
+ * 
+ *     def get_m_power(self, int _i):             # <<<<<<<<<<<<<<
+ *         return self.thisptr.get_m_power(_i)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_27get_m_power(PyObject *__pyx_v_self, PyObject *__pyx_arg__i); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_27get_m_power(PyObject *__pyx_v_self, PyObject *__pyx_arg__i) {
+  int __pyx_v__i;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("get_m_power (wrapper)", 0);
+  assert(__pyx_arg__i); {
+    __pyx_v__i = __Pyx_PyInt_As_int(__pyx_arg__i); if (unlikely((__pyx_v__i == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 70, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cpphelper_calc.CalcHelper.get_m_power", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_26get_m_power(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), ((int)__pyx_v__i));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_26get_m_power(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, int __pyx_v__i) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  __Pyx_RefNannySetupContext("get_m_power", 0);
+
+  /* "cpphelper_calc.pyx":71
+ * 
+ *     def get_m_power(self, int _i):
+ *         return self.thisptr.get_m_power(_i)             # <<<<<<<<<<<<<<
+ * 
+ *     def set_kp(self, float _y, float _p, float _r):
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->thisptr->get_m_power(__pyx_v__i)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "cpphelper_calc.pyx":70
+ *         return self.thisptr.get_ypr(_i)
+ * 
+ *     def get_m_power(self, int _i):             # <<<<<<<<<<<<<<
+ *         return self.thisptr.get_m_power(_i)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("cpphelper_calc.CalcHelper.get_m_power", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "cpphelper_calc.pyx":73
+ *         return self.thisptr.get_m_power(_i)
+ * 
+ *     def set_kp(self, float _y, float _p, float _r):             # <<<<<<<<<<<<<<
+ *         self.thisptr.set_kp(_y, _p, _r)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_29set_kp(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_29set_kp(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  float __pyx_v__y;
+  float __pyx_v__p;
+  float __pyx_v__r;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_kp (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_y,&__pyx_n_s_p,&__pyx_n_s_r,0};
+    PyObject* values[3] = {0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_y)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_p)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("set_kp", 1, 3, 3, 1); __PYX_ERR(0, 73, __pyx_L3_error)
+        }
+        case  2:
+        if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_r)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("set_kp", 1, 3, 3, 2); __PYX_ERR(0, 73, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "set_kp") < 0)) __PYX_ERR(0, 73, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+    }
+    __pyx_v__y = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v__y == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 73, __pyx_L3_error)
+    __pyx_v__p = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v__p == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 73, __pyx_L3_error)
+    __pyx_v__r = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v__r == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 73, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("set_kp", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 73, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cpphelper_calc.CalcHelper.set_kp", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_28set_kp(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), __pyx_v__y, __pyx_v__p, __pyx_v__r);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_28set_kp(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__y, float __pyx_v__p, float __pyx_v__r) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_kp", 0);
+
+  /* "cpphelper_calc.pyx":74
+ * 
+ *     def set_kp(self, float _y, float _p, float _r):
+ *         self.thisptr.set_kp(_y, _p, _r)             # <<<<<<<<<<<<<<
+ * 
+ *     def set_kd(self, float _y, float _p, float _r):
+ */
+  __pyx_v_self->thisptr->set_kp(__pyx_v__y, __pyx_v__p, __pyx_v__r);
+
+  /* "cpphelper_calc.pyx":73
+ *         return self.thisptr.get_m_power(_i)
+ * 
+ *     def set_kp(self, float _y, float _p, float _r):             # <<<<<<<<<<<<<<
+ *         self.thisptr.set_kp(_y, _p, _r)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "cpphelper_calc.pyx":76
+ *         self.thisptr.set_kp(_y, _p, _r)
+ * 
+ *     def set_kd(self, float _y, float _p, float _r):             # <<<<<<<<<<<<<<
+ *         self.thisptr.set_kd(_y, _p, _r)
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_31set_kd(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_31set_kd(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  float __pyx_v__y;
+  float __pyx_v__p;
+  float __pyx_v__r;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_kd (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_y,&__pyx_n_s_p,&__pyx_n_s_r,0};
+    PyObject* values[3] = {0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_y)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_p)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("set_kd", 1, 3, 3, 1); __PYX_ERR(0, 76, __pyx_L3_error)
+        }
+        case  2:
+        if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_r)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("set_kd", 1, 3, 3, 2); __PYX_ERR(0, 76, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "set_kd") < 0)) __PYX_ERR(0, 76, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+    }
+    __pyx_v__y = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v__y == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 76, __pyx_L3_error)
+    __pyx_v__p = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v__p == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 76, __pyx_L3_error)
+    __pyx_v__r = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v__r == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 76, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("set_kd", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 76, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cpphelper_calc.CalcHelper.set_kd", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_30set_kd(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), __pyx_v__y, __pyx_v__p, __pyx_v__r);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_30set_kd(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__y, float __pyx_v__p, float __pyx_v__r) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_kd", 0);
+
+  /* "cpphelper_calc.pyx":77
+ * 
+ *     def set_kd(self, float _y, float _p, float _r):
+ *         self.thisptr.set_kd(_y, _p, _r)             # <<<<<<<<<<<<<<
+ * 
+ *     def set_ki(self, float _y, float _p, float _r):
+ */
+  __pyx_v_self->thisptr->set_kd(__pyx_v__y, __pyx_v__p, __pyx_v__r);
+
+  /* "cpphelper_calc.pyx":76
+ *         self.thisptr.set_kp(_y, _p, _r)
+ * 
+ *     def set_kd(self, float _y, float _p, float _r):             # <<<<<<<<<<<<<<
+ *         self.thisptr.set_kd(_y, _p, _r)
+ * 
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "cpphelper_calc.pyx":79
+ *         self.thisptr.set_kd(_y, _p, _r)
+ * 
+ *     def set_ki(self, float _y, float _p, float _r):             # <<<<<<<<<<<<<<
+ *         self.thisptr.set_ki(_y, _p, _r)
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_33set_ki(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_14cpphelper_calc_10CalcHelper_33set_ki(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  float __pyx_v__y;
+  float __pyx_v__p;
+  float __pyx_v__r;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_ki (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_y,&__pyx_n_s_p,&__pyx_n_s_r,0};
+    PyObject* values[3] = {0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_y)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        case  1:
+        if (likely((values[1] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_p)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("set_ki", 1, 3, 3, 1); __PYX_ERR(0, 79, __pyx_L3_error)
+        }
+        case  2:
+        if (likely((values[2] = PyDict_GetItem(__pyx_kwds, __pyx_n_s_r)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("set_ki", 1, 3, 3, 2); __PYX_ERR(0, 79, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "set_ki") < 0)) __PYX_ERR(0, 79, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+    }
+    __pyx_v__y = __pyx_PyFloat_AsFloat(values[0]); if (unlikely((__pyx_v__y == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 79, __pyx_L3_error)
+    __pyx_v__p = __pyx_PyFloat_AsFloat(values[1]); if (unlikely((__pyx_v__p == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 79, __pyx_L3_error)
+    __pyx_v__r = __pyx_PyFloat_AsFloat(values[2]); if (unlikely((__pyx_v__r == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 79, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("set_ki", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 79, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("cpphelper_calc.CalcHelper.set_ki", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_14cpphelper_calc_10CalcHelper_32set_ki(((struct __pyx_obj_14cpphelper_calc_CalcHelper *)__pyx_v_self), __pyx_v__y, __pyx_v__p, __pyx_v__r);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_14cpphelper_calc_10CalcHelper_32set_ki(struct __pyx_obj_14cpphelper_calc_CalcHelper *__pyx_v_self, float __pyx_v__y, float __pyx_v__p, float __pyx_v__r) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("set_ki", 0);
+
+  /* "cpphelper_calc.pyx":80
+ * 
+ *     def set_ki(self, float _y, float _p, float _r):
+ *         self.thisptr.set_ki(_y, _p, _r)             # <<<<<<<<<<<<<<
+ */
+  __pyx_v_self->thisptr->set_ki(__pyx_v__y, __pyx_v__p, __pyx_v__r);
+
+  /* "cpphelper_calc.pyx":79
+ *         self.thisptr.set_kd(_y, _p, _r)
+ * 
+ *     def set_ki(self, float _y, float _p, float _r):             # <<<<<<<<<<<<<<
+ *         self.thisptr.set_ki(_y, _p, _r)
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -1904,15 +2428,20 @@ static void __pyx_tp_dealloc_14cpphelper_calc_CalcHelper(PyObject *o) {
 
 static PyMethodDef __pyx_methods_14cpphelper_calc_CalcHelper[] = {
   {"update", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_5update, METH_VARARGS|METH_KEYWORDS, 0},
-  {"set_bias_a", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_7set_bias_a, METH_VARARGS|METH_KEYWORDS, 0},
-  {"set_bias_g", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_9set_bias_g, METH_VARARGS|METH_KEYWORDS, 0},
-  {"get_q", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_11get_q, METH_O, 0},
-  {"get_ypr_y", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_13get_ypr_y, METH_NOARGS, 0},
-  {"get_ypr_p", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_15get_ypr_p, METH_NOARGS, 0},
-  {"get_ypr_r", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_17get_ypr_r, METH_NOARGS, 0},
-  {"get_a", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_19get_a, METH_O, 0},
-  {"get_g", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_21get_g, METH_O, 0},
-  {"get_deltat", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_23get_deltat, METH_NOARGS, 0},
+  {"control", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_7control, METH_VARARGS|METH_KEYWORDS, 0},
+  {"set_bias_a", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_9set_bias_a, METH_VARARGS|METH_KEYWORDS, 0},
+  {"set_bias_g", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_11set_bias_g, METH_VARARGS|METH_KEYWORDS, 0},
+  {"get_q", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_13get_q, METH_O, 0},
+  {"get_ypr_y", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_15get_ypr_y, METH_NOARGS, 0},
+  {"get_ypr_p", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_17get_ypr_p, METH_NOARGS, 0},
+  {"get_ypr_r", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_19get_ypr_r, METH_NOARGS, 0},
+  {"get_a", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_21get_a, METH_O, 0},
+  {"get_g", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_23get_g, METH_O, 0},
+  {"get_ypr", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_25get_ypr, METH_O, 0},
+  {"get_m_power", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_27get_m_power, METH_O, 0},
+  {"set_kp", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_29set_kp, METH_VARARGS|METH_KEYWORDS, 0},
+  {"set_kd", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_31set_kd, METH_VARARGS|METH_KEYWORDS, 0},
+  {"set_ki", (PyCFunction)__pyx_pw_14cpphelper_calc_10CalcHelper_33set_ki, METH_VARARGS|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 
@@ -2016,7 +2545,14 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_d8, __pyx_k_d8, sizeof(__pyx_k_d8), 0, 0, 1, 1},
   {&__pyx_n_s_d9, __pyx_k_d9, sizeof(__pyx_k_d9), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
+  {&__pyx_n_s_p, __pyx_k_p, sizeof(__pyx_k_p), 0, 0, 1, 1},
+  {&__pyx_n_s_r, __pyx_k_r, sizeof(__pyx_k_r), 0, 0, 1, 1},
+  {&__pyx_n_s_target_p, __pyx_k_target_p, sizeof(__pyx_k_target_p), 0, 0, 1, 1},
+  {&__pyx_n_s_target_r, __pyx_k_target_r, sizeof(__pyx_k_target_r), 0, 0, 1, 1},
+  {&__pyx_n_s_target_y, __pyx_k_target_y, sizeof(__pyx_k_target_y), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
+  {&__pyx_n_s_throttle, __pyx_k_throttle, sizeof(__pyx_k_throttle), 0, 0, 1, 1},
+  {&__pyx_n_s_y, __pyx_k_y, sizeof(__pyx_k_y), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static int __Pyx_InitCachedBuiltins(void) {
@@ -2121,9 +2657,9 @@ PyMODINIT_FUNC PyInit_cpphelper_calc(void)
   /*--- Variable export code ---*/
   /*--- Function export code ---*/
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_14cpphelper_calc_CalcHelper) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_14cpphelper_calc_CalcHelper) < 0) __PYX_ERR(0, 27, __pyx_L1_error)
   __pyx_type_14cpphelper_calc_CalcHelper.tp_print = 0;
-  if (PyObject_SetAttrString(__pyx_m, "CalcHelper", (PyObject *)&__pyx_type_14cpphelper_calc_CalcHelper) < 0) __PYX_ERR(0, 22, __pyx_L1_error)
+  if (PyObject_SetAttrString(__pyx_m, "CalcHelper", (PyObject *)&__pyx_type_14cpphelper_calc_CalcHelper) < 0) __PYX_ERR(0, 27, __pyx_L1_error)
   __pyx_ptype_14cpphelper_calc_CalcHelper = &__pyx_type_14cpphelper_calc_CalcHelper;
   /*--- Type import code ---*/
   /*--- Variable import code ---*/

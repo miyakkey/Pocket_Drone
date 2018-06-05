@@ -5,11 +5,18 @@ import threading
 import sys
 import readchar
 import numpy as np
+
+# Blynk
+# https://github.com/vshymanskyy/blynk-library-python
+# use Blynk :: https://www.blynk.cc/
+import BlynkLib
+
 # Adafruit BBIO library
 # https://github.com/adafruit/adafruit-beaglebone-io-python
 import Adafruit_BBIO.PWM as pwm
 import Adafruit_BBIO.ADC as adc
 import Adafruit_BBIO.SPI as SPI
+
 # my local library
 import cpphelper_calc
 
@@ -19,9 +26,7 @@ import cpphelper_calc
 #cf : MAX power is 25.0
 
 #to do
-# replace "readchar" library (or do not need?)
-# check mortor power +-
-# measure cycle time and change to C
+# replace "readchar"
 # add git readme and license
 ###### NOTE ###### NOTE ###### NOTE ###### NOTE ###### NOTE ######
 
@@ -41,10 +46,12 @@ READ_ALL = ( 0x3B | READ_FLAG, 0x3C | READ_FLAG, 0x3D | READ_FLAG, 0x3E | READ_F
              0x43 | READ_FLAG, 0x44 | READ_FLAG, 0x45 | READ_FLAG, 0x46 | READ_FLAG, 0x47 | READ_FLAG, 0x48 | READ_FLAG, 0x00 )
 MPUREG_WHOAMI = 0x75
 MPUREG_INT_STATUS = 0x3A
+BLYNK_AUTH = '7af31f3ac6dc44a596eb0b414b3b2e09'
 
 #hadler
 spi = SPI.SPI(0,0)
 calc = cpphelper_calc.CalcHelper()
+blynk = BlynkLib.Blynk(BLYNK_AUTH)
 
 #function
 def get_batt() :
@@ -64,6 +71,36 @@ def get_batt() :
             while ( True ) :
                 time.sleep(100)
         time.sleep(10)
+
+def controler() :
+    """
+    controler for threading
+    @param  -> none
+    @return -> none
+    """
+    global target_ypr, throttle, calc, spi
+    response = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    ret = [0, 0]
+    mortor_power = np.asarray([0,0,0,0], dtype = np.float16)
+    #angle_ypr_c = np.asarray([0,0,0], dtype = np.float32)
+    while( True ) :
+        ret = spi.xfer2( [ MPUREG_INT_STATUS | READ_FLAG , 0x00 ] )
+        if ( ret[1]&0x01 ) :
+            response = spi.xfer2( list( READ_ALL ) )
+            calc.update(*response)
+            #angle_ypr_c[0] = calc.get_ypr_y()
+            #angle_ypr_c[1] = calc.get_ypr_p()
+            #angle_ypr_c[2] = calc.get_ypr_r()
+            #print(angle_ypr_c)
+            #calculate controling
+            calc.control(throttle, *target_ypr)
+            mortor_power[0] = calc.get_m_power(0) + throttle
+            mortor_power[1] = calc.get_m_power(1) + throttle
+            mortor_power[2] = calc.get_m_power(2) + throttle
+            mortor_power[3] = calc.get_m_power(3) + throttle
+            move(mortor_power)
+            #print(mortor_power)
+        time.sleep(0.002)
 
 
 def move(args) :
@@ -343,7 +380,23 @@ def init_mpu(spi) :
     print ( "" )
     return accel_bias, gyro_bias
 
-    
+@blynk.VIRTUAL_WRITE(0)
+def b_input0(val) :
+    global throttle
+    throttle = float(val) / 500.0
+
+@blynk.VIRTUAL_WRITE(1)
+def b_input1(val) :
+    global target_ypr
+    target_ypr[2] = float(val) / 20.0
+
+@blynk.VIRTUAL_WRITE(2)
+def b_input2(val) :
+    global target_ypr
+    target_ypr[1] = float(val) / 20.0
+
+def blynk_handler():
+    blynk.run()
 
 #################################################  main  #################################################
 ###### setup ######
@@ -370,6 +423,17 @@ if ( batt > THRESHOLD_BATT ) :
     print ( "batt is {:.3f}V, OK".format(batt) )
 else :
     sys.exit("batt is going down. Charge now")
+t_batt = threading.Thread( target=get_batt )
+t_batt.setDaemon(True)
+t_batt.start()
+
+### Blynk setup ###
+print ( "Start Blynk Setup ..." )
+t_blynk = threading.Thread( target=blynk_handler )
+t_blynk.setDaemon(True)
+t_blynk.start()
+time.sleep(3) # wait blynk connection
+
 ### ESC setup ###
 print ( "Start ESC Setup ..." )
 for i in range (4) :
@@ -377,6 +441,7 @@ for i in range (4) :
         pwm.start(PIN_PWM[i], 12.5, PWM_FREQUENCY)
     except RuntimeError :
         print ( "...try to boot PWM-%s again" % i )
+        time.sleep(1)
         try :
             pwm.start(PIN_PWM[i], 12.5, PWM_FREQUENCY)
         except :
@@ -389,10 +454,6 @@ if ( char != 'y' ) :
     sys.exit("User Interrupt")
 print ( "Start" )
 
-t_batt = threading.Thread( target=get_batt )
-t_batt.setDaemon(True)
-t_batt.start()
-
 
 ###### raise program ######
 flag_main = True
@@ -404,56 +465,41 @@ calc.set_ki(*K_YPR_I)
 target_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
 throttle = 0.0
 
-angle_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
-delta_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
-delta_ypr_old = delta_ypr
-delta_ypr_delta = delta_ypr - delta_ypr_old
-delta_ypr_integrate = np.asarray([ 0, 0, 0 ], dtype = np.float32)
-control_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
-mortor_power = np.asarray([0,0,0,0], dtype = np.float16)
+t_controler = threading.Thread( target=controler )
+t_controler.setDaemon(True)
+t_controler.start()
+#response = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+#mortor_power = np.asarray([0,0,0,0], dtype = np.float16)
+#angle_ypr = np.asarray([0,0,0], dtype = np.float32)
+
 time_delta = 0
 time_old = time.time()
 #time_start = time_old
-response = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 count = 0
 
 while ( flag_main ) :
-#while( count < 500 ) :
-    #get sensor value
-    ret = spi.xfer2( [ MPUREG_INT_STATUS | READ_FLAG , 0x00 ] )
-    if ( ret[1]&0x01 ) :
-        response = spi.xfer2( list( READ_ALL ) )
-        calc.update(*response)
-        #angle_ypr[0] = calc.get_ypr_y()
-        #angle_ypr[1] = calc.get_ypr_p()
-        #angle_ypr[2] = calc.get_ypr_r()
-        
-        #calculate controling
-        '''
-        delta_ypr = angle_ypr - target_ypr
-        delta_ypr_delta = delta_ypr - delta_ypr_old
-        delta_ypr_old = delta_ypr
-        delta_ypr_integrate = delta_ypr_integrate + delta_ypr
-        now = time.time()
-        time_delta = now - time_old
-        time_old = now
-        control_ypr = ( K_YPR_P * delta_ypr + K_YPR_D * delta_ypr_delta / time_delta + K_YPR_I * delta_ypr_integrate )
-        mortor_power[0] = throttle - control_ypr[0] + control_ypr[1] + control_ypr[2] #right - flont
-        mortor_power[1] = throttle + control_ypr[0] + control_ypr[1] - control_ypr[2] # left - flont
-        mortor_power[2] = throttle - control_ypr[0] - control_ypr[1] - control_ypr[2] # left - back
-        mortor_power[3] = throttle + control_ypr[0] - control_ypr[1] + control_ypr[2] #right - back
-        '''
-        calc.control(throttle, *target_ypr)
-        mortor_power[0] = calc.get_m_power(0)
-        mortor_power[1] = calc.get_m_power(1)
-        mortor_power[2] = calc.get_m_power(2)
-        mortor_power[3] = calc.get_m_power(3)
-        move(mortor_power)
-        #count = count + 1
-    #if ( count > 99 ) :
-    #    count = 0
-    #    print ( "YPR:{0[0]:.3},{0[1]:.3},{0[2]:.3}".format(angle_ypr) )
-    #    print ( "Power:{0[0]:.3},{0[1]:.3},{0[2]:.3},{0[3]:.3}".format(mortor_power) )
+    print ( target_ypr )
+    print ( throttle )
+    char = input(">")
+    if ( char == 's' ) :
+        target_ypr[0] = 0
+        target_ypr[1] = 0
+        target_ypr[2] = 0
+        throttle = 0
+    elif ( char == 'w' ) :
+        target_ypr[1] = target_ypr[1] + 0.5
+    elif ( char == 'x' ) :
+        target_ypr[1] = target_ypr[1] - 0.5
+    elif ( char == 'a' ) :
+        target_ypr[2] = target_ypr[2] + 0.5
+    elif ( char == 'd' ) :
+        target_ypr[2] = target_ypr[2] - 0.5
+    elif ( char == 'o' ) :
+        throttle = throttle + 0.025
+    elif ( char == 'l' ) :
+        throttle = throttle - 0.025
+    elif ( char == 'k' ) :
+        flag_main = False
 
 ###### cleanup process ######
 #end = time.time() - time_start

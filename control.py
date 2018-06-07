@@ -3,7 +3,7 @@
 import time
 import threading
 import sys
-import readchar
+#import readchar
 import numpy as np
 
 # Blynk
@@ -22,12 +22,15 @@ import cpphelper_calc
 
 
 ###### NOTE ###### NOTE ###### NOTE ###### NOTE ###### NOTE ######
-#about 19.0~ ... Drone raiseing (maybe)
-#cf : MAX power is 25.0
-
 #to do
 # replace "readchar"
 # add git readme and license
+# Blynk is not stable, so replace socket connecting to my local pc
+
+##gain
+#d-0.005, p-0.013 : d is a little large?
+#d-0.004, p-0.015 : d is a little large? batt 7.8v
+#d-0.003~0.0025, p-0.015 : d is a bit large?
 ###### NOTE ###### NOTE ###### NOTE ###### NOTE ###### NOTE ######
 
 
@@ -37,9 +40,10 @@ PIN_BATT = "P1_25"
 K_ADC = 1.80 * 10.5
 THRESHOLD_BATT = 7.4
 PWM_FREQUENCY = 1000
-K_YPR_P = np.asarray([ 0.01, 0.01, 0.01 ], dtype = np.float32)
-K_YPR_D = np.asarray([ 0, 0, 0 ], dtype = np.float32)
-K_YPR_I = np.asarray([ 0, 0, 0 ], dtype = np.float32)
+K_YPR_P = np.asarray([ 0.005, 0.015, 0.015 ], dtype = np.float32)
+K_YPR_D = np.asarray([ 0, 0.0025, 0.0025 ], dtype = np.float32)
+K_YPR_I = np.asarray([ 0, 0.0, 0.0 ], dtype = np.float32)
+#M_OFFSET = np.asarray([0, 0, -0.04, 0], dtype = np.float16)
 READ_FLAG = 0x80
 READ_ALL = ( 0x3B | READ_FLAG, 0x3C | READ_FLAG, 0x3D | READ_FLAG, 0x3E | READ_FLAG, 0x3F | READ_FLAG, 0x40 | READ_FLAG,
              0x41 | READ_FLAG, 0x42 | READ_FLAG,
@@ -70,6 +74,8 @@ def get_batt() :
             flag_main = False
             while ( True ) :
                 time.sleep(100)
+        if ( _batt < THRESHOLD_BATT + 0.1 ) :
+            print ( "Warning::batt level is low, {:.3f}V".format(_batt) )
         time.sleep(10)
 
 def controler() :
@@ -109,7 +115,8 @@ def move(args) :
     @param  -> numpy array (4) # mortor(i) raise this power. 0.0 - 1.0
     @return -> none
     """
-    global PIN_BATT
+    global PIN_BATT#, M_OFFSET
+    #args = args + M_OFFSET
     args = np.clip(args, 0.0, 1.0)
     args = args * 12.5 + 12.5
     for i in range (4) :
@@ -383,12 +390,12 @@ def init_mpu(spi) :
 @blynk.VIRTUAL_WRITE(0)
 def b_input0(val) :
     global throttle
-    throttle = float(val) / 500.0
+    throttle = float(val) / 300.0 # max, ~0.33
 
 @blynk.VIRTUAL_WRITE(1)
 def b_input1(val) :
     global target_ypr
-    target_ypr[2] = float(val) / 20.0
+    target_ypr[2] = float(val) / 25.0 #max, 4degree
 
 @blynk.VIRTUAL_WRITE(2)
 def b_input2(val) :
@@ -400,6 +407,9 @@ def blynk_handler():
 
 #################################################  main  #################################################
 ###### setup ######
+print ( "Check Python version" )
+print ( sys.version )
+print ( "" )
 ### MPU initialize ###
 accel_bias = np.asarray([ 0, 0, 0 ], dtype=np.float32)
 gyro_bias  = np.asarray([ 0, 0, 0 ], dtype=np.float32)
@@ -419,9 +429,10 @@ calc.set_bias_g(*gyro_bias)
 print ( "Checking Battery ..." )
 adc.setup()
 batt = adc.read(PIN_BATT) * K_ADC
-if ( batt > THRESHOLD_BATT ) :
+if ( batt > ( THRESHOLD_BATT + 0.1 ) ) :
     print ( "batt is {:.3f}V, OK".format(batt) )
 else :
+    print ( "batt is {:.3f}V".format(batt) )
     sys.exit("batt is going down. Charge now")
 t_batt = threading.Thread( target=get_batt )
 t_batt.setDaemon(True)
@@ -468,9 +479,6 @@ throttle = 0.0
 t_controler = threading.Thread( target=controler )
 t_controler.setDaemon(True)
 t_controler.start()
-#response = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-#mortor_power = np.asarray([0,0,0,0], dtype = np.float16)
-#angle_ypr = np.asarray([0,0,0], dtype = np.float32)
 
 time_delta = 0
 time_old = time.time()

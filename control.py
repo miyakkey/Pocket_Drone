@@ -5,11 +5,12 @@ import threading
 import sys
 #import readchar
 import numpy as np
+import socket
 
 # Blynk
 # https://github.com/vshymanskyy/blynk-library-python
 # use Blynk :: https://www.blynk.cc/
-import BlynkLib
+#import BlynkLib
 
 # Adafruit BBIO library
 # https://github.com/adafruit/adafruit-beaglebone-io-python
@@ -37,7 +38,7 @@ import cpphelper_calc
 #connstant
 PIN_PWM = ( "P1_33" , "P1_36" , "P2_1" , "P2_3" )
 PIN_BATT = "P1_25"
-K_ADC = 1.80 * 10.5
+K_ADC = 1.80 * 10.65
 THRESHOLD_BATT = 7.4
 PWM_FREQUENCY = 1000
 K_YPR_P = np.asarray([ 0.005, 0.015, 0.015 ], dtype = np.float32)
@@ -50,12 +51,16 @@ READ_ALL = ( 0x3B | READ_FLAG, 0x3C | READ_FLAG, 0x3D | READ_FLAG, 0x3E | READ_F
              0x43 | READ_FLAG, 0x44 | READ_FLAG, 0x45 | READ_FLAG, 0x46 | READ_FLAG, 0x47 | READ_FLAG, 0x48 | READ_FLAG, 0x00 )
 MPUREG_WHOAMI = 0x75
 MPUREG_INT_STATUS = 0x3A
-BLYNK_AUTH = '7af31f3ac6dc44a596eb0b414b3b2e09'
+#BLYNK_AUTH = '7af31f3ac6dc44a596eb0b414b3b2e09'
 
 #hadler
 spi = SPI.SPI(0,0)
 calc = cpphelper_calc.CalcHelper()
-blynk = BlynkLib.Blynk(BLYNK_AUTH)
+#blynk = BlynkLib.Blynk(BLYNK_AUTH)
+
+#global varient
+target_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
+throttle = 0.0
 
 #function
 def get_batt() :
@@ -108,7 +113,6 @@ def controler() :
             #print(mortor_power)
         time.sleep(0.002)
 
-
 def move(args) :
     """
     mortor safety access function 
@@ -121,7 +125,6 @@ def move(args) :
     args = args * 12.5 + 12.5
     for i in range (4) :
         pwm.set_duty_cycle(PIN_PWM[i], args[i])
-
 
 def init_mpu(spi) :
     """
@@ -387,10 +390,31 @@ def init_mpu(spi) :
     print ( "" )
     return accel_bias, gyro_bias
 
+def send_ack() :
+    while ( True ) :
+        server.sendto(b'ACK', (send_addr, int(send_port)))
+        time.sleep(5)
+
+def receive_data() :
+    global throttle, target_ypr
+    while ( True ) :
+        data, (addr, port) = server.recvfrom(512)
+        if ( addr == send_addr ) :
+            s_data = data.decode('utf-8')
+            ss_data = s_data.split('@')
+            if ( ss_data[0] == 't' ) :
+                throttle = float(ss_data[1]) / 150.0
+            elif ( ss_data[0] == 'p' ) :
+                target_ypr[1] = float(ss_data[1]) / 25.0
+            elif ( ss_data[0] == 'r' ) :
+                target_ypr[2] = float(ss_data[1]) / 25.0
+        time.sleep(0.005)
+    
+'''
 @blynk.VIRTUAL_WRITE(0)
 def b_input0(val) :
     global throttle
-    throttle = float(val) / 300.0 # max, ~0.33
+    throttle = float(val) / 150.0 # max, 0.6
 
 @blynk.VIRTUAL_WRITE(1)
 def b_input1(val) :
@@ -404,7 +428,7 @@ def b_input2(val) :
 
 def blynk_handler():
     blynk.run()
-
+'''
 #################################################  main  #################################################
 ###### setup ######
 print ( "Check Python version" )
@@ -437,13 +461,39 @@ else :
 t_batt = threading.Thread( target=get_batt )
 t_batt.setDaemon(True)
 t_batt.start()
-
+'''
 ### Blynk setup ###
 print ( "Start Blynk Setup ..." )
 t_blynk = threading.Thread( target=blynk_handler )
 t_blynk.setDaemon(True)
 t_blynk.start()
 time.sleep(3) # wait blynk connection
+'''
+### Socket setup ###
+print ( 'Starting UDP Setup ...' )
+server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+port = 10002
+server.bind(('', port))
+send_addr = ''
+send_port = ''
+flag_connection = False
+while ( flag_connection == False ) :
+    print ( 'Waiting Connection. Please send message from controler' )
+    data, (send_addr, send_port) = server.recvfrom(1024)
+    print ( 'Receive data, {0}'.format(data) )
+    print ( 'from ::address={0}, port={1}'.format(send_addr, send_port) )
+    print ( 'is this your controler? y/n' )
+    char = input('>')
+    if ( char == 'y' ) :
+        flag_connection = True
+server.sendto(b'Hello from Server', (send_addr, int(send_port)))
+print ( 'Server send test message.' )
+#t_sendack = threading.Thread( target=send_ack )
+#t_sendack.setDaemon(True)
+#t_sendack.start()
+t_receive = threading.Thread( target=receive_data )
+t_receive.setDaemon(True)
+t_receive.start()
 
 ### ESC setup ###
 print ( "Start ESC Setup ..." )
@@ -472,9 +522,6 @@ flag_main = True
 calc.set_kp(*K_YPR_P)
 calc.set_kd(*K_YPR_D)
 calc.set_ki(*K_YPR_I)
-
-target_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
-throttle = 0.0
 
 t_controler = threading.Thread( target=controler )
 t_controler.setDaemon(True)
@@ -512,5 +559,6 @@ while ( flag_main ) :
 ###### cleanup process ######
 #end = time.time() - time_start
 #print ( "Time,{0}".format(end) )
+server.close()
 pwm.cleanup()
 print ( "End Process" )

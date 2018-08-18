@@ -39,11 +39,14 @@ import cpphelper_calc
 PIN_PWM = ( "P1_33" , "P1_36" , "P2_1" , "P2_3" )
 PIN_BATT = "P1_25"
 K_ADC = 1.80 * 10.65
-THRESHOLD_BATT = 7.4
+#THRESHOLD_BATT = 7.4
+THRESHOLD_BATT = 10.8
 PWM_FREQUENCY = 1000
-K_YPR_P = np.asarray([ 0.005, 0.015, 0.015 ], dtype = np.float32)
-K_YPR_D = np.asarray([ 0, 0.0025, 0.0025 ], dtype = np.float32)
-K_YPR_I = np.asarray([ 0, 0.0, 0.0 ], dtype = np.float32)
+#K_YPR_P = np.asarray([ 0.005, 0.015, 0.015 ], dtype = np.float32)
+#K_YPR_D = np.asarray([ 0, 0.0025, 0.0025 ], dtype = np.float32)
+K_YPR_P = np.asarray([ 0.003, 0.003, 0.003 ], dtype = np.float32)
+K_YPR_D = np.asarray([ 0.0, 0.0, 0.0 ], dtype = np.float32)
+K_YPR_I = np.asarray([ 0.0, 0.0, 0.0 ], dtype = np.float32)
 #M_OFFSET = np.asarray([0, 0, -0.04, 0], dtype = np.float16)
 READ_FLAG = 0x80
 READ_ALL = ( 0x3B | READ_FLAG, 0x3C | READ_FLAG, 0x3D | READ_FLAG, 0x3E | READ_FLAG, 0x3F | READ_FLAG, 0x40 | READ_FLAG,
@@ -122,7 +125,8 @@ def move(args) :
     global PIN_BATT#, M_OFFSET
     #args = args + M_OFFSET
     args = np.clip(args, 0.0, 1.0)
-    args = args * 12.5 + 12.5
+    #args = args * 12.5 + 12.5 #this is true One-shot 125, for STM32 controler ESC
+    args = args * 100 # normal PWM
     for i in range (4) :
         pwm.set_duty_cycle(PIN_PWM[i], args[i])
 
@@ -403,7 +407,7 @@ def receive_data() :
             s_data = data.decode('utf-8')
             ss_data = s_data.split('@')
             if ( ss_data[0] == 't' ) :
-                throttle = float(ss_data[1]) / 150.0
+                throttle = float(ss_data[1]) / 100.0
             elif ( ss_data[0] == 'p' ) :
                 target_ypr[1] = float(ss_data[1]) / 25.0
             elif ( ss_data[0] == 'r' ) :
@@ -469,7 +473,9 @@ t_blynk.setDaemon(True)
 t_blynk.start()
 time.sleep(3) # wait blynk connection
 '''
+'''
 ### Socket setup ###
+#check 'server.close()' at the end of this program
 print ( 'Starting UDP Setup ...' )
 server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 port = 10002
@@ -494,17 +500,17 @@ print ( 'Server send test message.' )
 t_receive = threading.Thread( target=receive_data )
 t_receive.setDaemon(True)
 t_receive.start()
-
+'''
 ### ESC setup ###
 print ( "Start ESC Setup ..." )
 for i in range (4) :
     try :
-        pwm.start(PIN_PWM[i], 12.5, PWM_FREQUENCY)
+        pwm.start(PIN_PWM[i], 0.0, PWM_FREQUENCY)
     except RuntimeError :
         print ( "...try to boot PWM-%s again" % i )
         time.sleep(1)
         try :
-            pwm.start(PIN_PWM[i], 12.5, PWM_FREQUENCY)
+            pwm.start(PIN_PWM[i], 0.0, PWM_FREQUENCY)
         except :
             print(sys.exc_info())
             sys.exit("Error in booting ESC")
@@ -513,6 +519,19 @@ print ( "Connect Battery to ESC, press 'y' to continue..." )
 char = input(">")
 if ( char != 'y' ) :
     sys.exit("User Interrupt")
+temp = np.asarray([0.0,0.0,0.0,0.0], dtype = np.float16)
+temp.fill(0.05)
+move(temp)
+char = input(">")
+if ( char != 'y' ) :
+    sys.exit("User Interrupt")
+
+temp = np.asarray([0.0,0.0,0.0,0.0], dtype = np.float16)
+move(temp)
+char = input(">")
+if ( char != 'y' ) :
+    sys.exit("User Interrupt")
+
 print ( "Start" )
 
 
@@ -559,6 +578,6 @@ while ( flag_main ) :
 ###### cleanup process ######
 #end = time.time() - time_start
 #print ( "Time,{0}".format(end) )
-server.close()
+#server.close()
 pwm.cleanup()
 print ( "End Process" )

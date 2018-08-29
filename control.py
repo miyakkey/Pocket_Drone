@@ -120,10 +120,10 @@ def controler() :
             #print(angle_ypr_c)
             #calculate controling
             calc.control(throttle, *target_ypr)
-            mortor_power[0] = calc.get_m_power(0) + throttle
-            mortor_power[1] = calc.get_m_power(1) + throttle
-            mortor_power[2] = calc.get_m_power(2) + throttle
-            mortor_power[3] = calc.get_m_power(3) + throttle
+            mortor_power[0] = calc.get_m_power(0) #+ throttle
+            mortor_power[1] = calc.get_m_power(1) #+ throttle
+            mortor_power[2] = calc.get_m_power(2) #+ throttle
+            mortor_power[3] = calc.get_m_power(3) #+ throttle # is this bug?
             move(mortor_power)
             #print(mortor_power)
         time.sleep(0.002)

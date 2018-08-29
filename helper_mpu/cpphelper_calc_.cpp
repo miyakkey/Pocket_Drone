@@ -11,6 +11,8 @@ cpphelper_calc::cpphelper_calc():beta( sqrt(3.0f / 4.0f) * M_PI * 5.0f / 180.0f 
     SEq_1 = 1.0f, SEq_2 = 0.0f, SEq_3 = 0.0f, SEq_4 = 0.0f;
     a_x = 0.0f , a_y = 0.0f , a_z = 0.0f ;
     w_x = 0.0f , w_y = 0.0f , w_z = 0.0f ;
+    height = 0.0 , v_z = 0.0 ;
+    gravity = 0.0f ;
     for ( int i = 0 ; i < 3 ; i++ ){
         angle_ypr[i] = 0.0f ;
         bias_a[i] = 0.0f ;
@@ -55,6 +57,7 @@ void cpphelper_calc::update(    unsigned char d1, unsigned char d2, unsigned cha
     w_z = ( float(dest_g[2]) * 250.0f/32768.0f- bias_g[2] ) * M_PI/180.0f ;
     
     // ### Madgwick Update ###
+    // ## Estimate Attitude angle using Madgwick filter ##
     // Local system variables
     float norm; // vector norm
     float SEqDot_omega_1, SEqDot_omega_2, SEqDot_omega_3, SEqDot_omega_4; // quaternion derrivative from gyroscopes elements
@@ -126,6 +129,12 @@ void cpphelper_calc::update(    unsigned char d1, unsigned char d2, unsigned cha
     angle_ypr[0] = atan2(2.0f * (SEq_2 * SEq_3 + SEq_1 * SEq_4), SEq_1 * SEq_1 + SEq_2 * SEq_2 - SEq_3 * SEq_3 - SEq_4 * SEq_4) * 180.0f / M_PI ;
     angle_ypr[1] = asin(2.0f * (SEq_1 * SEq_3 - SEq_2 * SEq_4))  * 180.0f / M_PI ;
     angle_ypr[2] = atan2(2.0f * (SEq_1 * SEq_2 + SEq_3 * SEq_4), SEq_1 * SEq_1 - SEq_2 * SEq_2 - SEq_3 * SEq_3 + SEq_4 * SEq_4) * 180.0f / M_PI ;
+    
+    // ### Update height ###
+    // simple integrate version
+    v_z = v_z + (double)( a_z - gravity ) * (double)deltat ;
+    height = height + v_z * (double)deltat ;
+    
     return ;
 }
 
@@ -255,6 +264,14 @@ void cpphelper_calc::set_ki(float _y, float _p, float _r){
     return ;
 }
 
+void cpphelper_calc::set_gravity(float _g){
+    gravity = _g ;
+    return ;
+}
 
+double cpphelper_calc::get_height(){
+    return height ;
+    //return v_z ;
+}
 
 } //namespace n_cpphelper_calc

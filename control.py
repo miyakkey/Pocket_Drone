@@ -358,6 +358,7 @@ def init_mpu(spi) :
     
     accel_bias = accel_bias / 80
     gyro_bias = gyro_bias / 80
+    
     print ("CALIBRATE RAW DATA")
     print ( "accel-x:%s, accel-y:%s, accel-z:%s" % (accel_bias[0], accel_bias[1], accel_bias[2]) )
     print ( "gyro-x:%s, gyro-y:%s, gyro-z:%s" % (gyro_bias[0], gyro_bias[1], gyro_bias[2]) )
@@ -427,7 +428,12 @@ def receive_data() :
             elif ( ss_data[0] == 'r' ) :
                 target_ypr[2] = float(ss_data[1]) / 25.0
         time.sleep(0.005)
-    
+
+def get_height() :
+    while ( True ) :
+        print ( "Z:{0:.3f}, A:{1:.3f}".format(calc.get_height(),calc.get_a(2)) )
+        time.sleep(1)
+
 '''
 @blynk.VIRTUAL_WRITE(0)
 def b_input0(val) :
@@ -466,6 +472,11 @@ print ( "Success in connecting to MPU, change communication speed to 20MHz" )
 spi.msh = 20000000
 calc.set_bias_a(*accel_bias)
 calc.set_bias_g(*gyro_bias)
+
+# 18/8/29 insert ... save t_accel[2] value
+calc.set_gravity( 1.000 )
+print ( "save gravity data :: {0}".format(1.000) )
+# insert end
 
 ### battery check ###
 print ( "Checking Battery ..." )
@@ -561,14 +572,20 @@ t_controler = threading.Thread( target=controler )
 t_controler.setDaemon(True)
 t_controler.start()
 
+t_temp = threading.Thread( target=get_height )
+t_temp.setDaemon(True)
+t_temp.start()
+
 time_delta = 0
 time_old = time.time()
 #time_start = time_old
 count = 0
+    
 
 while ( flag_main ) :
     print ( target_ypr )
     print ( throttle )
+    print ( calc.get_height() )
     char = input(">")
     if ( char == 's' ) :
         target_ypr[0] = 0

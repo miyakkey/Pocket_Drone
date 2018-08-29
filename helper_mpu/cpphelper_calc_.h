@@ -10,6 +10,11 @@
 //#define GYROMEASERROR 3.14159265358979f * (5.0f / 180.0f)
 //#define BETA ( sqrt(3.0f / 4.0f) * GYROMEASERROR )
 
+// after change .h, .cpp, .pyx file in this directory ... 
+// (1) run 'python3 setup.py build_ext --inplace' and compile
+// (2) copy '~.so' file to your working directory
+// (3) rename 'example.cython-version.so' to 'example.so'
+
 namespace n_cpphelper_calc{
     class cpphelper_calc{
     public:
@@ -26,15 +31,16 @@ namespace n_cpphelper_calc{
         float get_q(int _qi) ;
         float get_a(int _i) ;
         float get_g(int _i) ;
-        float get_ypr(int _i) ; //new
-        float get_m_power(int _i) ; //new
-        void set_kp(float _y, float _p, float _r) ;//new
-        void set_kd(float _y, float _p, float _r) ;//new
-        void set_ki(float _y, float _p, float _r) ;//new
+        float get_ypr(int _i) ;
+        float get_m_power(int _i) ;
+        void set_kp(float _y, float _p, float _r) ;
+        void set_kd(float _y, float _p, float _r) ;
+        void set_ki(float _y, float _p, float _r) ;
         float get_ypr_y() ;
         float get_ypr_p() ;
         float get_ypr_r() ;
-        //float get_deltat() ; // delete
+        void set_gravity(float _g) ;//new
+        double get_height() ;//new
         
     private :
         float a_x, a_y, a_z; // accelerometer measurements
@@ -47,8 +53,9 @@ namespace n_cpphelper_calc{
         struct timeval n, o, n_m, o_m ;
         float mortor_power[4], control_ypr[3] ;
         float delta_ypr[3], delta_ypr_delta[3], delta_ypr_old[3], delta_ypr_integrate[3] ;
-        //float deltat ;
         const float beta ;
+        float gravity ;
+        double height, v_z ;
     };
 }
 

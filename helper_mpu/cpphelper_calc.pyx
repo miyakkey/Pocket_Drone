@@ -19,9 +19,11 @@ cdef extern from "cpphelper_calc_.h" namespace "n_cpphelper_calc" :
         float get_g(int _i)
         float get_ypr(int _i)
         float get_m_power(int _i)
+        double get_height()
         void set_kp(float _y, float _p, float _r)
         void set_kd(float _y, float _p, float _r)
         void set_ki(float _y, float _p, float _r)
+        void set_gravity(float _g)
 
 
 cdef class CalcHelper(object) :
@@ -70,6 +72,9 @@ cdef class CalcHelper(object) :
     def get_m_power(self, int _i):
         return self.thisptr.get_m_power(_i)
     
+    def get_height(self):
+        return self.thisptr.get_height()
+    
     def set_kp(self, float _y, float _p, float _r):
         self.thisptr.set_kp(_y, _p, _r)
     
@@ -78,3 +83,6 @@ cdef class CalcHelper(object) :
     
     def set_ki(self, float _y, float _p, float _r):
         self.thisptr.set_ki(_y, _p, _r)
+    
+    def set_gravity(self, float _g):
+        self.thisptr.set_gravity(_g)

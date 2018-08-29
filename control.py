@@ -23,30 +23,42 @@ import cpphelper_calc
 
 
 ###### NOTE ###### NOTE ###### NOTE ###### NOTE ###### NOTE ######
-#to do
+# If you will use BLHeli ESCs in Atmel, you should not use them in PWM mode.
+# When was very low level of PWM signal inputed, they cannot get the PWM signal.
+# At the worst case, mortors connected the ESCs rotate in high speed unexpectedly.
+# You had better use them in PPM mode.
+
+## to do
 # replace "readchar"
 # add git readme and license
 # Blynk is not stable, so replace socket connecting to my local pc
 
-##gain
+## gain for large Drone
 #d-0.005, p-0.013 : d is a little large?
 #d-0.004, p-0.015 : d is a little large? batt 7.8v
 #d-0.003~0.0025, p-0.015 : d is a bit large?
 ###### NOTE ###### NOTE ###### NOTE ###### NOTE ###### NOTE ######
 
 
-#connstant
+#connstants
+
 PIN_PWM = ( "P1_33" , "P1_36" , "P2_1" , "P2_3" )
 PIN_BATT = "P1_25"
 K_ADC = 1.80 * 10.65
 #THRESHOLD_BATT = 7.4
-THRESHOLD_BATT = 10.8
-PWM_FREQUENCY = 1000
+THRESHOLD_BATT = 11.0
+#PWM_FREQUENCY = 1000
+PWM_FREQUENCY = 200
+
+#gain for large Drone (PD Control)
 #K_YPR_P = np.asarray([ 0.005, 0.015, 0.015 ], dtype = np.float32)
 #K_YPR_D = np.asarray([ 0, 0.0025, 0.0025 ], dtype = np.float32)
-K_YPR_P = np.asarray([ 0.003, 0.003, 0.003 ], dtype = np.float32)
-K_YPR_D = np.asarray([ 0.0, 0.0, 0.0 ], dtype = np.float32)
+
+#gain for mini Drone
+K_YPR_P = np.asarray([ 0.002, 0.004, 0.004 ], dtype = np.float32)
+K_YPR_D = np.asarray([ 0.0001, 0.0005, 0.0005 ], dtype = np.float32)
 K_YPR_I = np.asarray([ 0.0, 0.0, 0.0 ], dtype = np.float32)
+
 #M_OFFSET = np.asarray([0, 0, -0.04, 0], dtype = np.float16)
 READ_FLAG = 0x80
 READ_ALL = ( 0x3B | READ_FLAG, 0x3C | READ_FLAG, 0x3D | READ_FLAG, 0x3E | READ_FLAG, 0x3F | READ_FLAG, 0x40 | READ_FLAG,
@@ -126,7 +138,9 @@ def move(args) :
     #args = args + M_OFFSET
     args = np.clip(args, 0.0, 1.0)
     #args = args * 12.5 + 12.5 #this is true One-shot 125, for STM32 controler ESC
-    args = args * 100 # normal PWM
+    #args = args * 100 # this is normal PWM, up to PWM_FREQUENCY = 1000
+    #args = 11.50 + args * 6.8 # this is PPM in 100Hz
+    args = 23 + args * 13.6 # this is PPM in 200Hz
     for i in range (4) :
         pwm.set_duty_cycle(PIN_PWM[i], args[i])
 
@@ -537,6 +551,7 @@ print ( "Start" )
 
 ###### raise program ######
 flag_main = True
+throttle = 0.015
 
 calc.set_kp(*K_YPR_P)
 calc.set_kd(*K_YPR_D)

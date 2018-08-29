@@ -150,7 +150,7 @@ void cpphelper_calc::control(float _throttle, float _target_y, float _target_p, 
     gettimeofday(&o_m, NULL) ;
     
     for ( int i = 0 ; i < 3 ; i++ ){
-        control_ypr[i] = kp_ypr[i] * delta_ypr[i] + kd_ypr[i] * delta_ypr_delta[i] / time_delta + ki_ypr[i] * delta_ypr_integrate[i] ;
+        control_ypr[i] = kp_ypr[i] * delta_ypr[i] + kd_ypr[i] * delta_ypr_delta[i] / time_delta + ki_ypr[i] * delta_ypr_integrate[i] * time_delta ;
     }
     mortor_power[0] = _throttle - control_ypr[0] + control_ypr[1] + control_ypr[2] ; //right - flont
     mortor_power[1] = _throttle + control_ypr[0] + control_ypr[1] - control_ypr[2] ; // left - flont

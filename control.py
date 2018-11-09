@@ -46,7 +46,11 @@ PIN_PWM = ( "P1_33" , "P1_36" , "P2_1" , "P2_3" )
 PIN_BATT = "P1_25"
 K_ADC = 1.80 * 10.65
 #THRESHOLD_BATT = 7.4
-THRESHOLD_BATT = 11.0
+THRESHOLD_BATT_NOLOAD = 11.0 #for 3cell, default is 11.1
+THRESHOLD_BATT_LOSS = 0.198 #Line loss voltage. See DJI NAZA Manual. You need change battery if this value is 0.3 per cell
+THRESHOLD_BATT = THRESHOLD_BATT_NOLOAD - THRESHOLD_BATT_LOSS
+THRESHOLD_BATT_WARNING_OFFSET = 0.5 # Warning Offset
+THRESHOLD_BATT_WARNING = THRESHOLD_BATT + THRESHOLD_BATT_WARNING_OFFSET
 #PWM_FREQUENCY = 1000
 PWM_FREQUENCY = 200
 
@@ -55,8 +59,8 @@ PWM_FREQUENCY = 200
 #K_YPR_D = np.asarray([ 0, 0.0025, 0.0025 ], dtype = np.float32)
 
 #gain for mini Drone
-K_YPR_P = np.asarray([ 0.002, 0.004, 0.004 ], dtype = np.float32)
-K_YPR_D = np.asarray([ 0.0001, 0.0005, 0.0005 ], dtype = np.float32)
+K_YPR_P = np.asarray([ 0.0012, 0.00275, 0.00275 ], dtype = np.float32)
+K_YPR_D = np.asarray([ 0.0005, 0.0011, 0.0011 ], dtype = np.float32)
 K_YPR_I = np.asarray([ 0.0, 0.0, 0.0 ], dtype = np.float32)
 
 #M_OFFSET = np.asarray([0, 0, -0.04, 0], dtype = np.float16)
@@ -94,7 +98,7 @@ def get_batt() :
             flag_main = False
             while ( True ) :
                 time.sleep(100)
-        if ( _batt < THRESHOLD_BATT + 0.1 ) :
+        if ( _batt < THRESHOLD_BATT_WARNING ) :
             print ( "Warning::batt level is low, {:.3f}V".format(_batt) )
         time.sleep(10)
 
@@ -134,7 +138,7 @@ def move(args) :
     @param  -> numpy array (4) # mortor(i) raise this power. 0.0 - 1.0
     @return -> none
     """
-    global PIN_BATT#, M_OFFSET
+    #global PIN_BATT, M_OFFSET
     #args = args + M_OFFSET
     args = np.clip(args, 0.0, 1.0)
     #args = args * 12.5 + 12.5 #this is true One-shot 125, for STM32 controler ESC
@@ -471,8 +475,13 @@ calc.set_bias_g(*gyro_bias)
 print ( "Checking Battery ..." )
 adc.setup()
 batt = adc.read(PIN_BATT) * K_ADC
-if ( batt > ( THRESHOLD_BATT + 0.1 ) ) :
+if ( batt > ( THRESHOLD_BATT_WARNING_OFFSET + THRESHOLD_BATT_NOLOAD ) ) :
     print ( "batt is {:.3f}V, OK".format(batt) )
+elif ( batt > THRESHOLD_BATT_NOLOAD ) :
+    print ( "batt is under warning level ({:.3f}V). Continue?".format(batt) )
+    char = input(">")
+    if ( char != 'y' ) :
+        sys.exit("User Interrupt")
 else :
     print ( "batt is {:.3f}V".format(batt) )
     sys.exit("batt is going down. Charge now")

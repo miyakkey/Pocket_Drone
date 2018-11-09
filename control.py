@@ -69,7 +69,7 @@ MPUREG_INT_STATUS = 0x3A
 #BLYNK_AUTH = '7af31f3ac6dc44a596eb0b414b3b2e09'
 
 #hadler
-spi = SPI.SPI(0,0)
+spi = SPI.SPI(1,0)
 calc = cpphelper_calc.CalcHelper()
 #blynk = BlynkLib.Blynk(BLYNK_AUTH)
 
@@ -551,7 +551,7 @@ print ( "Start" )
 
 ###### raise program ######
 flag_main = True
-throttle = 0.015
+throttle = 0.0
 
 calc.set_kp(*K_YPR_P)
 calc.set_kd(*K_YPR_D)

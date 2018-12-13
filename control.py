@@ -59,7 +59,7 @@ PWM_FREQUENCY = 200
 #K_YPR_D = np.asarray([ 0, 0.0025, 0.0025 ], dtype = np.float32)
 
 #gain for mini Drone
-K_YPR_P = np.asarray([ 0.0012, 0.00275, 0.00275 ], dtype = np.float32)
+K_YPR_P = np.asarray([ 0.0018, 0.00275, 0.00275 ], dtype = np.float32)
 K_YPR_D = np.asarray([ 0.0005, 0.0011, 0.0011 ], dtype = np.float32)
 K_YPR_I = np.asarray([ 0.0, 0.0, 0.0 ], dtype = np.float32)
 
@@ -425,11 +425,11 @@ def receive_data() :
             s_data = data.decode('utf-8')
             ss_data = s_data.split('@')
             if ( ss_data[0] == 't' ) :
-                throttle = float(ss_data[1]) / 100.0
+                throttle = float(ss_data[1]) / 300.0
             elif ( ss_data[0] == 'p' ) :
-                target_ypr[1] = float(ss_data[1]) / 25.0
+                target_ypr[1] = float(ss_data[1]) / 10.0
             elif ( ss_data[0] == 'r' ) :
-                target_ypr[2] = float(ss_data[1]) / 25.0
+                target_ypr[2] = float(ss_data[1]) / 10.0
         time.sleep(0.005)
     
 '''
@@ -481,7 +481,7 @@ elif ( batt > THRESHOLD_BATT_NOLOAD ) :
     print ( "batt is under warning level ({:.3f}V). Continue?".format(batt) )
     char = input(">")
     if ( char != 'y' ) :
-        sys.exit("User Interrupt")
+        sys.exit()
 else :
     print ( "batt is {:.3f}V".format(batt) )
     sys.exit("batt is going down. Charge now")
@@ -496,7 +496,7 @@ t_blynk.setDaemon(True)
 t_blynk.start()
 time.sleep(3) # wait blynk connection
 '''
-'''
+
 ### Socket setup ###
 #check 'server.close()' at the end of this program
 print ( 'Starting UDP Setup ...' )
@@ -523,7 +523,7 @@ print ( 'Server send test message.' )
 t_receive = threading.Thread( target=receive_data )
 t_receive.setDaemon(True)
 t_receive.start()
-'''
+
 ### ESC setup ###
 print ( "Start ESC Setup ..." )
 for i in range (4) :

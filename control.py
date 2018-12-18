@@ -59,8 +59,8 @@ PWM_FREQUENCY = 200
 #K_YPR_D = np.asarray([ 0, 0.0025, 0.0025 ], dtype = np.float32)
 
 #gain for mini Drone
-K_YPR_P = np.asarray([ 0.0018, 0.00275, 0.00275 ], dtype = np.float32)
-K_YPR_D = np.asarray([ 0.0005, 0.0011, 0.0011 ], dtype = np.float32)
+K_YPR_P = np.asarray([ 0.0018, 0.0028, 0.0028 ], dtype = np.float32)
+K_YPR_D = np.asarray([ 0.0005, 0.0012, 0.0012 ], dtype = np.float32)
 K_YPR_I = np.asarray([ 0.0, 0.0, 0.0 ], dtype = np.float32)
 
 #M_OFFSET = np.asarray([0, 0, -0.04, 0], dtype = np.float16)
@@ -425,11 +425,11 @@ def receive_data() :
             s_data = data.decode('utf-8')
             ss_data = s_data.split('@')
             if ( ss_data[0] == 't' ) :
-                throttle = float(ss_data[1]) / 300.0
+                throttle = float(ss_data[1]) / 250.0
             elif ( ss_data[0] == 'p' ) :
-                target_ypr[1] = float(ss_data[1]) / 10.0
+                target_ypr[1] = float(ss_data[1]) / 8.0
             elif ( ss_data[0] == 'r' ) :
-                target_ypr[2] = float(ss_data[1]) / 10.0
+                target_ypr[2] = float(ss_data[1]) / 8.0
         time.sleep(0.005)
     
 '''

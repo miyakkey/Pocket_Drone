@@ -5,7 +5,8 @@ import threading
 import sys
 #import readchar
 import numpy as np
-import socket
+#import socket
+import serial
 
 # Blynk
 # https://github.com/vshymanskyy/blynk-library-python
@@ -59,7 +60,7 @@ PWM_FREQUENCY = 200
 #K_YPR_D = np.asarray([ 0, 0.0025, 0.0025 ], dtype = np.float32)
 
 #gain for mini Drone
-K_YPR_P = np.asarray([ 0.0018, 0.0028, 0.0028 ], dtype = np.float32)
+K_YPR_P = np.asarray([ 0.0018, 0.0030, 0.0030 ], dtype = np.float32)
 K_YPR_D = np.asarray([ 0.0005, 0.0012, 0.0012 ], dtype = np.float32)
 K_YPR_I = np.asarray([ 0.0, 0.0, 0.0 ], dtype = np.float32)
 
@@ -412,25 +413,22 @@ def init_mpu(spi) :
     print ( "" )
     return accel_bias, gyro_bias
 
+'''
 def send_ack() :
     while ( True ) :
         server.sendto(b'ACK', (send_addr, int(send_port)))
         time.sleep(5)
+'''
 
 def receive_data() :
     global throttle, target_ypr
     while ( True ) :
-        data, (addr, port) = server.recvfrom(512)
-        if ( addr == send_addr ) :
-            s_data = data.decode('utf-8')
-            ss_data = s_data.split('@')
-            if ( ss_data[0] == 't' ) :
-                throttle = float(ss_data[1]) / 250.0
-            elif ( ss_data[0] == 'p' ) :
-                target_ypr[1] = float(ss_data[1]) / 8.0
-            elif ( ss_data[0] == 'r' ) :
-                target_ypr[2] = float(ss_data[1]) / 8.0
-        time.sleep(0.005)
+        rec = ser.readline().decode()
+        if ( len(rec) == 7 ) :
+            throttle = float(ord(rec[0]) - 100) / 200.0
+            target_ypr[2] = float(ord(rec[1]) - 100) / 5.0
+            target_ypr[1] = float(ord(rec[2]) - 100) / 5.0
+            target_ypr[0] = float(ord(rec[3]) - 100) / 5.0
     
 '''
 @blynk.VIRTUAL_WRITE(0)
@@ -471,6 +469,7 @@ spi.msh = 20000000
 calc.set_bias_a(*accel_bias)
 calc.set_bias_g(*gyro_bias)
 
+
 ### battery check ###
 print ( "Checking Battery ..." )
 adc.setup()
@@ -488,6 +487,7 @@ else :
 t_batt = threading.Thread( target=get_batt )
 t_batt.setDaemon(True)
 t_batt.start()
+
 '''
 ### Blynk setup ###
 print ( "Start Blynk Setup ..." )
@@ -497,6 +497,15 @@ t_blynk.start()
 time.sleep(3) # wait blynk connection
 '''
 
+### serial setup ###
+print ( 'Setup Serial Device' )
+ser = serial.Serial(port = "/dev/ttyS4", baudrate=9600)
+print ("Serial is open!")
+t_receive = threading.Thread( target=receive_data )
+t_receive.setDaemon(True)
+t_receive.start()
+
+'''
 ### Socket setup ###
 #check 'server.close()' at the end of this program
 print ( 'Starting UDP Setup ...' )
@@ -523,6 +532,7 @@ print ( 'Server send test message.' )
 t_receive = threading.Thread( target=receive_data )
 t_receive.setDaemon(True)
 t_receive.start()
+'''
 
 ### ESC setup ###
 print ( "Start ESC Setup ..." )

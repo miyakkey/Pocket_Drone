@@ -425,7 +425,7 @@ def receive_data() :
     while ( True ) :
         rec = ser.readline().decode()
         if ( len(rec) == 7 ) :
-            throttle = float(ord(rec[0]) - 100) / 200.0
+            throttle = float(ord(rec[0]) - 100) / 100.0
             target_ypr[2] = float(ord(rec[1]) - 100) / 5.0
             target_ypr[1] = float(ord(rec[2]) - 100) / 5.0
             target_ypr[0] = float(ord(rec[3]) - 100) / 5.0

@@ -3,10 +3,9 @@
 import time
 import threading
 import sys
-#import readchar
 import numpy as np
-#import socket
 import serial
+#import socket
 
 # Blynk
 # https://github.com/vshymanskyy/blynk-library-python
@@ -30,59 +29,57 @@ import cpphelper_calc
 # You had better use them in PPM mode.
 
 ## to do
-# replace "readchar"
 # add git readme and license
-# Blynk is not stable, so replace socket connecting to my local pc
-
-## gain for large Drone
-#d-0.005, p-0.013 : d is a little large?
-#d-0.004, p-0.015 : d is a little large? batt 7.8v
-#d-0.003~0.0025, p-0.015 : d is a bit large?
+# configure batt alert volatage
 ###### NOTE ###### NOTE ###### NOTE ###### NOTE ###### NOTE ######
 
 
-#connstants
+###Constants
 
+#Pin Assignment
 PIN_PWM = ( "P1_33" , "P1_36" , "P2_1" , "P2_3" )
 PIN_BATT = "P1_25"
-K_ADC = 1.80 * 10.65
-#THRESHOLD_BATT = 7.4
-THRESHOLD_BATT_NOLOAD = 11.0 #for 3cell, default is 11.1
-THRESHOLD_BATT_LOSS = 0.198 #Line loss voltage. See DJI NAZA Manual. You need change battery if this value is 0.3 per cell
-THRESHOLD_BATT = THRESHOLD_BATT_NOLOAD - THRESHOLD_BATT_LOSS
-THRESHOLD_BATT_WARNING_OFFSET = 0.5 # Warning Offset
-THRESHOLD_BATT_WARNING = THRESHOLD_BATT + THRESHOLD_BATT_WARNING_OFFSET
-#PWM_FREQUENCY = 1000
-PWM_FREQUENCY = 200
 
-#gain for large Drone (PD Control)
-#K_YPR_P = np.asarray([ 0.005, 0.015, 0.015 ], dtype = np.float32)
-#K_YPR_D = np.asarray([ 0, 0.0025, 0.0025 ], dtype = np.float32)
-
-#gain for mini Drone
+#Gain
 K_YPR_P = np.asarray([ 0.0018, 0.0030, 0.0030 ], dtype = np.float32)
 K_YPR_D = np.asarray([ 0.0005, 0.0012, 0.0012 ], dtype = np.float32)
 K_YPR_I = np.asarray([ 0.0, 0.0, 0.0 ], dtype = np.float32)
 
-#M_OFFSET = np.asarray([0, 0, -0.04, 0], dtype = np.float16)
+#MPU Address
 READ_FLAG = 0x80
 READ_ALL = ( 0x3B | READ_FLAG, 0x3C | READ_FLAG, 0x3D | READ_FLAG, 0x3E | READ_FLAG, 0x3F | READ_FLAG, 0x40 | READ_FLAG,
              0x41 | READ_FLAG, 0x42 | READ_FLAG,
              0x43 | READ_FLAG, 0x44 | READ_FLAG, 0x45 | READ_FLAG, 0x46 | READ_FLAG, 0x47 | READ_FLAG, 0x48 | READ_FLAG, 0x00 )
 MPUREG_WHOAMI = 0x75
 MPUREG_INT_STATUS = 0x3A
-#BLYNK_AUTH = '7af31f3ac6dc44a596eb0b414b3b2e09'
+
+#Other constants
+K_ADC = 1.80 * 10.65
+THRESHOLD_BATT_NOLOAD = 11.0 #for 3cell, default is 11.1
+THRESHOLD_BATT_LOSS = 0.198 #Line loss voltage. See DJI NAZA Manual. You need change battery if this value is 0.3 per cell
+THRESHOLD_BATT = THRESHOLD_BATT_NOLOAD - THRESHOLD_BATT_LOSS
+THRESHOLD_BATT_WARNING_OFFSET = 0.5 # Warning Offset
+THRESHOLD_BATT_WARNING = THRESHOLD_BATT + THRESHOLD_BATT_WARNING_OFFSET
+PWM_FREQUENCY = 200 # = 1000
+#BLYNK_AUTH = '7ee767c8cf2b42c19ee9c1e3f48028a9'
 
 #hadler
 spi = SPI.SPI(1,0)
 calc = cpphelper_calc.CalcHelper()
 #blynk = BlynkLib.Blynk(BLYNK_AUTH)
 
+### Varients
 #global varient
 target_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
 throttle = 0.0
+flag_main = True
+flag_controler = True
+#thread hadler
+t_batt = None
+t_controler = None
+t_receive = None
 
-#function
+###############################################  function  ###############################################
 def get_batt() :
     """
     batt check for threading
@@ -93,6 +90,7 @@ def get_batt() :
     while ( True ) :
         global flag_main
         _batt = adc.read(PIN_BATT) * K_ADC
+        #blynk.virtual_write(2, int(_batt*10))
         if ( _batt < THRESHOLD_BATT ) :
             print ( "batt is {:.3f}V".format(_batt) )
             print ( "batt is going down. Charge now" )
@@ -114,16 +112,17 @@ def controler() :
     ret = [0, 0]
     mortor_power = np.asarray([0,0,0,0], dtype = np.float16)
     #angle_ypr_c = np.asarray([0,0,0], dtype = np.float32)
-    while( True ) :
+    while( flag_controler ) :
         ret = spi.xfer2( [ MPUREG_INT_STATUS | READ_FLAG , 0x00 ] )
         if ( ret[1]&0x01 ) :
             response = spi.xfer2( list( READ_ALL ) )
             calc.update(*response)
+            # debug print
             #angle_ypr_c[0] = calc.get_ypr_y()
             #angle_ypr_c[1] = calc.get_ypr_p()
             #angle_ypr_c[2] = calc.get_ypr_r()
             #print(angle_ypr_c)
-            #calculate controling
+            # calculate controling
             calc.control(throttle, *target_ypr)
             mortor_power[0] = calc.get_m_power(0) #+ throttle
             mortor_power[1] = calc.get_m_power(1) #+ throttle
@@ -139,12 +138,10 @@ def move(args) :
     @param  -> numpy array (4) # mortor(i) raise this power. 0.0 - 1.0
     @return -> none
     """
-    #global PIN_BATT, M_OFFSET
-    #args = args + M_OFFSET
     args = np.clip(args, 0.0, 1.0)
-    #args = args * 12.5 + 12.5 #this is true One-shot 125, for STM32 controler ESC
-    #args = args * 100 # this is normal PWM, up to PWM_FREQUENCY = 1000
-    #args = 11.50 + args * 6.8 # this is PPM in 100Hz
+    #args = args * 12.5 + 12.5  # this is true One-shot 125, for STM32 controler ESC
+    #args = args * 100          # this is normal PWM, up to PWM_FREQUENCY = 1000
+    #args = 11.50 + args * 6.8  # this is PPM in 100Hz
     args = 23 + args * 13.6 # this is PPM in 200Hz
     for i in range (4) :
         pwm.set_duty_cycle(PIN_PWM[i], args[i])
@@ -413,15 +410,17 @@ def init_mpu(spi) :
     print ( "" )
     return accel_bias, gyro_bias
 
-'''
-def send_ack() :
-    while ( True ) :
-        server.sendto(b'ACK', (send_addr, int(send_port)))
-        time.sleep(5)
-'''
-
 def receive_data() :
-    global throttle, target_ypr
+    """
+    receive data bia TweLite and controle Drone
+    @param  -> none
+    @return -> none
+    """
+    #datapacket :: trpydd (throttle, roll, pitch, yaw, data1, data2 )
+    #trpy :: 0 to 200 : (rpy)-> -100 to 100, (t)-> 0 to 100
+    #data1 :: 0-1 : 0-NAP, 1-Start/End motor
+    #data2 :: xx : No use
+    global throttle, target_ypr, flag_controler, t_controler
     while ( True ) :
         rec = ser.readline().decode()
         if ( len(rec) == 7 ) :
@@ -429,6 +428,18 @@ def receive_data() :
             target_ypr[2] = float(ord(rec[1]) - 100) / 5.0
             target_ypr[1] = float(ord(rec[2]) - 100) / 5.0
             target_ypr[0] = float(ord(rec[3]) - 100) / 5.0
+            if ( int(ord(rec[4])) == 1 ) :
+                if ( flag_controler ) :
+                    flag_controler = False
+                    print ( "controler off from PC" )
+                else :
+                    flag_controler = True
+                    t_controler = threading.Thread( target=controler )
+                    t_controler.setDaemon(True)
+                    t_controler.start()
+                    print ( "controler on from PC" )
+
+
     
 '''
 @blynk.VIRTUAL_WRITE(0)
@@ -552,38 +563,41 @@ print ( "Connect Battery to ESC, press 'y' to continue..." )
 char = input(">")
 if ( char != 'y' ) :
     sys.exit("User Interrupt")
+
 temp = np.asarray([0.0,0.0,0.0,0.0], dtype = np.float16)
 temp.fill(0.05)
 move(temp)
+'''
 char = input(">")
 if ( char != 'y' ) :
     sys.exit("User Interrupt")
+'''
+time.sleep(3)
 
 temp = np.asarray([0.0,0.0,0.0,0.0], dtype = np.float16)
 move(temp)
+'''
 char = input(">")
 if ( char != 'y' ) :
     sys.exit("User Interrupt")
+'''
+time.sleep(3)
 
 print ( "Start" )
 
 
 ###### raise program ######
-flag_main = True
 throttle = 0.0
+target_ypr[0] = 0.0
+target_ypr[1] = 0.0
+target_ypr[2] = 0.0
 
 calc.set_kp(*K_YPR_P)
 calc.set_kd(*K_YPR_D)
 calc.set_ki(*K_YPR_I)
 
-t_controler = threading.Thread( target=controler )
-t_controler.setDaemon(True)
-t_controler.start()
-
-time_delta = 0
-time_old = time.time()
-#time_start = time_old
-count = 0
+flag_main = True
+flag_controler = False
 
 while ( flag_main ) :
     print ( target_ypr )
@@ -608,10 +622,23 @@ while ( flag_main ) :
         throttle = throttle - 0.025
     elif ( char == 'k' ) :
         flag_main = False
+    elif ( char == 'p' ) :
+        if ( flag_controler ) :
+            print ( "Turning off controler ..." )
+            flag_controler = False
+            t_controler.join()
+            print ( "Success in turning off controler" )
+        else :
+            print ( "Turning on controler ..." )
+            flag_controler = True
+            t_controler = threading.Thread( target=controler )
+            t_controler.setDaemon(True)
+            t_controler.start()
+
+
+
 
 ###### cleanup process ######
-#end = time.time() - time_start
-#print ( "Time,{0}".format(end) )
 #server.close()
 pwm.cleanup()
 print ( "End Process" )

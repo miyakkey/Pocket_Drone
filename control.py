@@ -17,6 +17,7 @@ import serial
 import Adafruit_BBIO.PWM as pwm
 import Adafruit_BBIO.ADC as adc
 import Adafruit_BBIO.SPI as SPI
+import Adafruit_BBIO.GPIO as gpio
 
 # my local library
 import cpphelper_calc
@@ -39,6 +40,7 @@ import cpphelper_calc
 #Pin Assignment
 PIN_PWM = ( "P1_33" , "P1_36" , "P2_1" , "P2_3" )
 PIN_BATT = "P1_25"
+PIN_LED = "USR3"
 
 #Gain
 K_YPR_P = np.asarray([ 0.0018, 0.0030, 0.0030 ], dtype = np.float32)
@@ -74,8 +76,10 @@ target_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
 throttle = 0.0
 flag_main = True
 flag_controler = True
+flag_led_set = 0
 #thread hadler
 t_batt = None
+t_led = None
 t_controler = None
 t_receive = None
 
@@ -86,11 +90,12 @@ def get_batt() :
     @param  -> none
     @return -> none
     """
-    global PIN_BATT, K_ADC
+    global PIN_BATT, K_ADC, flag_led_set
     while ( True ) :
         global flag_main
         _batt = adc.read(PIN_BATT) * K_ADC
         #blynk.virtual_write(2, int(_batt*10))
+        flag_led_set = 0
         if ( _batt < THRESHOLD_BATT ) :
             print ( "batt is {:.3f}V".format(_batt) )
             print ( "batt is going down. Charge now" )
@@ -98,8 +103,23 @@ def get_batt() :
             while ( True ) :
                 time.sleep(100)
         if ( _batt < THRESHOLD_BATT_WARNING ) :
+            flag_led_set = 1
             print ( "Warning::batt level is low, {:.3f}V".format(_batt) )
         time.sleep(10)
+
+def led_handler() :
+    gpio.setup(PIN_LED, gpio.OUT)
+    for i in range(2) :
+        gpio.output(PIN_LED, gpio.HIGH)
+        time.sleep(0.1)
+        gpio.output(PIN_LED, gpio.LOW)
+        time.sleep(0.5)
+    while( True ) :
+        if ( flag_led_set == 0 ) :
+            gpio.output(PIN_LED, gpio.LOW)
+        elif ( flag_led_set == 1 ) :
+            gpio.output(PIN_LED, gpio.HIGH)
+        time.sleep(2)
 
 def controler() :
     """
@@ -465,6 +485,11 @@ def blynk_handler():
 print ( "Check Python version" )
 print ( sys.version )
 print ( "" )
+### LED setup ###
+t_led = threading.Thread( target=led_handler )
+t_led.setDaemon(True)
+t_led.start()
+
 ### MPU initialize ###
 accel_bias = np.asarray([ 0, 0, 0 ], dtype=np.float32)
 gyro_bias  = np.asarray([ 0, 0, 0 ], dtype=np.float32)
@@ -636,9 +661,8 @@ while ( flag_main ) :
             t_controler.start()
 
 
-
-
 ###### cleanup process ######
 #server.close()
+gpio.cleanup(PIN_LED)
 pwm.cleanup()
 print ( "End Process" )

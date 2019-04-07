@@ -10,7 +10,7 @@ import serial
 # Blynk
 # https://github.com/vshymanskyy/blynk-library-python
 # use Blynk :: https://www.blynk.cc/
-#import BlynkLib
+import blynklib
 
 # Adafruit BBIO library
 # https://github.com/adafruit/adafruit-beaglebone-io-python
@@ -57,25 +57,26 @@ MPUREG_INT_STATUS = 0x3A
 
 #Other constants
 K_ADC = 1.80 * 10.65
-THRESHOLD_BATT_NOLOAD = 11.0 #for 3cell, default is 11.1
-THRESHOLD_BATT_LOSS = 0.198 #Line loss voltage. See DJI NAZA Manual. You need change battery if this value is 0.3 per cell
+THRESHOLD_BATT_NOLOAD = 11.1 #for 3cell, default is 11.1
+THRESHOLD_BATT_LOSS = 0.4 #Line loss voltage. See DJI NAZA Manual. You need change battery if this value is 0.3 per cell
+#true value is 0.5
 THRESHOLD_BATT = THRESHOLD_BATT_NOLOAD - THRESHOLD_BATT_LOSS
 THRESHOLD_BATT_WARNING_OFFSET = 0.5 # Warning Offset
 THRESHOLD_BATT_WARNING = THRESHOLD_BATT + THRESHOLD_BATT_WARNING_OFFSET
 PWM_FREQUENCY = 200 # = 1000
-#BLYNK_AUTH = '7ee767c8cf2b42c19ee9c1e3f48028a9'
+BLYNK_AUTH = '7ee767c8cf2b42c19ee9c1e3f48028a9'
 
 #hadler
 spi = SPI.SPI(1,0)
 calc = cpphelper_calc.CalcHelper()
-#blynk = BlynkLib.Blynk(BLYNK_AUTH)
+#blynk = blynklib.Blynk(BLYNK_AUTH)
 
 ### Varients
 #global varient
 target_ypr = np.asarray([ 0, 0, 0 ], dtype = np.float32)
 throttle = 0.0
 flag_main = True
-flag_controler = True
+#flag_controler = True
 flag_led_set = 0
 #thread hadler
 t_batt = None
@@ -97,14 +98,14 @@ def get_batt() :
         #blynk.virtual_write(2, int(_batt*10))
         flag_led_set = 0
         if ( _batt < THRESHOLD_BATT ) :
-            print ( "batt is {:.3f}V".format(_batt) )
+            print ( "batt is {:.3f}V".format(_batt+THRESHOLD_BATT_LOSS) )
             print ( "batt is going down. Charge now" )
             flag_main = False
             while ( True ) :
                 time.sleep(100)
         if ( _batt < THRESHOLD_BATT_WARNING ) :
             flag_led_set = 1
-            print ( "Warning::batt level is low, {:.3f}V".format(_batt) )
+            print ( "Warning::batt level is low, {:.3f}V, real voltage is {:.3f}V".format(_batt+THRESHOLD_BATT_LOSS, _batt) )
         time.sleep(10)
 
 def led_handler() :
@@ -132,7 +133,7 @@ def controler() :
     ret = [0, 0]
     mortor_power = np.asarray([0,0,0,0], dtype = np.float16)
     #angle_ypr_c = np.asarray([0,0,0], dtype = np.float32)
-    while( flag_controler ) :
+    while( True ) :
         ret = spi.xfer2( [ MPUREG_INT_STATUS | READ_FLAG , 0x00 ] )
         if ( ret[1]&0x01 ) :
             response = spi.xfer2( list( READ_ALL ) )
@@ -438,9 +439,9 @@ def receive_data() :
     """
     #datapacket :: trpydd (throttle, roll, pitch, yaw, data1, data2 )
     #trpy :: 0 to 200 : (rpy)-> -100 to 100, (t)-> 0 to 100
-    #data1 :: 0-1 : 0-NAP, 1-Start/End motor
+    #data1 :: 0 : 0-NAP
     #data2 :: xx : No use
-    global throttle, target_ypr, flag_controler, t_controler
+    global throttle, target_ypr, t_controler
     while ( True ) :
         rec = ser.readline().decode()
         if ( len(rec) == 7 ) :
@@ -448,6 +449,7 @@ def receive_data() :
             target_ypr[2] = float(ord(rec[1]) - 100) / 5.0
             target_ypr[1] = float(ord(rec[2]) - 100) / 5.0
             target_ypr[0] = float(ord(rec[3]) - 100) / 5.0
+            '''
             if ( int(ord(rec[4])) == 1 ) :
                 if ( flag_controler ) :
                     flag_controler = False
@@ -458,6 +460,7 @@ def receive_data() :
                     t_controler.setDaemon(True)
                     t_controler.start()
                     print ( "controler on from PC" )
+            '''
 
 
     
@@ -480,6 +483,7 @@ def b_input2(val) :
 def blynk_handler():
     blynk.run()
 '''
+
 #################################################  main  #################################################
 ###### setup ######
 print ( "Check Python version" )
@@ -592,21 +596,13 @@ if ( char != 'y' ) :
 temp = np.asarray([0.0,0.0,0.0,0.0], dtype = np.float16)
 temp.fill(0.05)
 move(temp)
-'''
-char = input(">")
-if ( char != 'y' ) :
-    sys.exit("User Interrupt")
-'''
+
 time.sleep(3)
 
 temp = np.asarray([0.0,0.0,0.0,0.0], dtype = np.float16)
 move(temp)
-'''
-char = input(">")
-if ( char != 'y' ) :
-    sys.exit("User Interrupt")
-'''
-time.sleep(3)
+
+time.sleep(2)
 
 print ( "Start" )
 
@@ -622,7 +618,9 @@ calc.set_kd(*K_YPR_D)
 calc.set_ki(*K_YPR_I)
 
 flag_main = True
-flag_controler = False
+t_controler = threading.Thread( target=controler )
+t_controler.setDaemon(True)
+t_controler.start()
 
 while ( flag_main ) :
     print ( target_ypr )
@@ -647,6 +645,7 @@ while ( flag_main ) :
         throttle = throttle - 0.025
     elif ( char == 'k' ) :
         flag_main = False
+    '''
     elif ( char == 'p' ) :
         if ( flag_controler ) :
             print ( "Turning off controler ..." )
@@ -659,6 +658,7 @@ while ( flag_main ) :
             t_controler = threading.Thread( target=controler )
             t_controler.setDaemon(True)
             t_controler.start()
+    '''
 
 
 ###### cleanup process ######

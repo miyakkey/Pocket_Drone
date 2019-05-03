@@ -8,7 +8,7 @@ import serial
 #import socket
 
 # Blynk
-# https://github.com/vshymanskyy/blynk-library-python
+# https://github.com/blynkkk/lib-python
 # use Blynk :: https://www.blynk.cc/
 import blynklib
 
@@ -28,6 +28,13 @@ import cpphelper_calc
 # When was very low level of PWM signal inputed, they cannot get the PWM signal.
 # At the worst case, mortors connected the ESCs rotate in high speed unexpectedly.
 # You had better use them in PPM mode.
+
+# This program run under python3 and other library
+#   Adafruit_BBIO 1.1.0
+#   (pyctrl, rcpy)
+#   Cython 0.25.2
+#   numpy 1.12.1
+#   pyserial 3.4
 
 ## to do
 # add git readme and license
@@ -66,10 +73,11 @@ THRESHOLD_BATT_WARNING = THRESHOLD_BATT + THRESHOLD_BATT_WARNING_OFFSET
 PWM_FREQUENCY = 200 # = 1000
 BLYNK_AUTH = '7ee767c8cf2b42c19ee9c1e3f48028a9'
 
+
 #hadler
 spi = SPI.SPI(1,0)
 calc = cpphelper_calc.CalcHelper()
-#blynk = blynklib.Blynk(BLYNK_AUTH)
+blynk = blynklib.Blynk(BLYNK_AUTH)
 
 ### Varients
 #global varient
@@ -78,6 +86,9 @@ throttle = 0.0
 flag_main = True
 #flag_controler = True
 flag_led_set = 0
+flag_start = 0
+flag_entry = 0
+words_entry = ''
 #thread hadler
 t_batt = None
 t_led = None
@@ -95,7 +106,7 @@ def get_batt() :
     while ( True ) :
         global flag_main
         _batt = adc.read(PIN_BATT) * K_ADC
-        #blynk.virtual_write(2, int(_batt*10))
+        blynk.virtual_write(2, '{}'.format(_batt))
         flag_led_set = 0
         if ( _batt < THRESHOLD_BATT ) :
             print ( "batt is {:.3f}V".format(_batt+THRESHOLD_BATT_LOSS) )
@@ -463,32 +474,45 @@ def receive_data() :
             '''
 
 
-    
-'''
-@blynk.VIRTUAL_WRITE(0)
-def b_input0(val) :
-    global throttle
-    throttle = float(val) / 150.0 # max, 0.6
 
-@blynk.VIRTUAL_WRITE(1)
-def b_input1(val) :
-    global target_ypr
-    target_ypr[2] = float(val) / 25.0 #max, 4degree
+@blynk.handle_event('write V0')
+def v0_handler(pin, value) :
+    global flag_start
+    if value[0] == '1' :
+        flag_start = 1
 
-@blynk.VIRTUAL_WRITE(2)
-def b_input2(val) :
-    global target_ypr
-    target_ypr[1] = float(val) / 20.0
+@blynk.handle_event('write V1')
+def v1_handler(pin, value) :
+    global flag_entry , words_entry
+    words_entry = value
+    flag_entry = 1
+
+#blynk ::
+# v0 ... start signal
+# v1 ... serial debug
+# v2 ... batt voltage
 
 def blynk_handler():
-    blynk.run()
-'''
+    while ( True ) :
+        blynk.run()
+
 
 #################################################  main  #################################################
 ###### setup ######
 print ( "Check Python version" )
 print ( sys.version )
 print ( "" )
+
+### Blynk setup ###
+print ( "Start Blynk Setup ..." )
+t_blynk = threading.Thread( target=blynk_handler )
+t_blynk.setDaemon(True)
+t_blynk.start()
+while ( flag_start == 0 ) :
+    time.sleep(1)
+blynk.virtual_write(1, '\n\n........................\n')
+blynk.virtual_write(1, 'OK. Blynk Setup Ended.\n')
+
 ### LED setup ###
 t_led = threading.Thread( target=led_handler )
 t_led.setDaemon(True)
@@ -505,10 +529,10 @@ if ( ret[1] != 0x70 ) :
     print ( ret )
     sys.exit("Faile MPU connection")
 print ( "Success in connecting to MPU, change communication speed to 20MHz" )
+blynk.virtual_write(1, 'MPU Setup Ended.\n')
 spi.msh = 20000000
 calc.set_bias_a(*accel_bias)
 calc.set_bias_g(*gyro_bias)
-
 
 ### battery check ###
 print ( "Checking Battery ..." )
@@ -516,63 +540,39 @@ adc.setup()
 batt = adc.read(PIN_BATT) * K_ADC
 if ( batt > ( THRESHOLD_BATT_WARNING_OFFSET + THRESHOLD_BATT_NOLOAD ) ) :
     print ( "batt is {:.3f}V, OK".format(batt) )
+    blynk.virtual_write(1, 'batt is {:.3f}V.\n'.format(batt) )
 elif ( batt > THRESHOLD_BATT_NOLOAD ) :
     print ( "batt is under warning level ({:.3f}V). Continue?".format(batt) )
-    char = input(">")
-    if ( char != 'y' ) :
+    blynk.virtual_write(1, 'batt is under warning level ({:.3f}V). Continue?.\n'.format(batt) )
+    #char = input(">")
+    #if ( char != 'y' ) :
+    #    sys.exit()
+    while( flag_entry == 0 ):
+        time.sleep(1)
+    if ( words_entry[0] != 'y' ):
+        blynk.virtual_write(1, 'Entry words is {}\n'.format(words_entry) )
+        blynk.virtual_write(1, 'User Interrupt\n' )
         sys.exit()
+    flag_entry = 0
+    words_entry = ''
 else :
     print ( "batt is {:.3f}V".format(batt) )
+    blynk.virtual_write(1, 'batt is going down. Charge now\n')
     sys.exit("batt is going down. Charge now")
 t_batt = threading.Thread( target=get_batt )
 t_batt.setDaemon(True)
 t_batt.start()
 
-'''
-### Blynk setup ###
-print ( "Start Blynk Setup ..." )
-t_blynk = threading.Thread( target=blynk_handler )
-t_blynk.setDaemon(True)
-t_blynk.start()
-time.sleep(3) # wait blynk connection
-'''
 
 ### serial setup ###
 print ( 'Setup Serial Device' )
 ser = serial.Serial(port = "/dev/ttyS4", baudrate=9600)
 print ("Serial is open!")
+blynk.virtual_write(1, 'Serial Open\n')
 t_receive = threading.Thread( target=receive_data )
 t_receive.setDaemon(True)
 t_receive.start()
 
-'''
-### Socket setup ###
-#check 'server.close()' at the end of this program
-print ( 'Starting UDP Setup ...' )
-server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-port = 10002
-server.bind(('', port))
-send_addr = ''
-send_port = ''
-flag_connection = False
-while ( flag_connection == False ) :
-    print ( 'Waiting Connection. Please send message from controler' )
-    data, (send_addr, send_port) = server.recvfrom(1024)
-    print ( 'Receive data, {0}'.format(data) )
-    print ( 'from ::address={0}, port={1}'.format(send_addr, send_port) )
-    print ( 'is this your controler? y/n' )
-    char = input('>')
-    if ( char == 'y' ) :
-        flag_connection = True
-server.sendto(b'Hello from Server', (send_addr, int(send_port)))
-print ( 'Server send test message.' )
-#t_sendack = threading.Thread( target=send_ack )
-#t_sendack.setDaemon(True)
-#t_sendack.start()
-t_receive = threading.Thread( target=receive_data )
-t_receive.setDaemon(True)
-t_receive.start()
-'''
 
 ### ESC setup ###
 print ( "Start ESC Setup ..." )
@@ -588,10 +588,19 @@ for i in range (4) :
             print(sys.exc_info())
             sys.exit("Error in booting ESC")
 print ( "Success in PWM Setup " )
+blynk.virtual_write(1, 'Success in PWM Setup\n')
 print ( "Connect Battery to ESC, press 'y' to continue..." )
-char = input(">")
-if ( char != 'y' ) :
-    sys.exit("User Interrupt")
+#char = input(">")
+#if ( char != 'y' ) :
+#    sys.exit("User Interrupt")
+while( flag_entry == 0 ):
+    time.sleep(1)
+if ( words_entry[0] != 'y' ):
+    blynk.virtual_write(1, 'Entry words is {}\n'.format(words_entry) )
+    blynk.virtual_write(1, 'User Interrupt\n' )
+    sys.exit()
+flag_entry = 0
+words_entry = ''
 
 temp = np.asarray([0.0,0.0,0.0,0.0], dtype = np.float16)
 temp.fill(0.05)
@@ -605,6 +614,7 @@ move(temp)
 time.sleep(2)
 
 print ( "Start" )
+blynk.virtual_write(1, 'Start\n' )
 
 
 ###### raise program ######
@@ -625,6 +635,7 @@ t_controler.start()
 while ( flag_main ) :
     print ( target_ypr )
     print ( throttle )
+    '''
     char = input(">")
     if ( char == 's' ) :
         target_ypr[0] = 0
@@ -646,19 +657,13 @@ while ( flag_main ) :
     elif ( char == 'k' ) :
         flag_main = False
     '''
-    elif ( char == 'p' ) :
-        if ( flag_controler ) :
-            print ( "Turning off controler ..." )
-            flag_controler = False
-            t_controler.join()
-            print ( "Success in turning off controler" )
-        else :
-            print ( "Turning on controler ..." )
-            flag_controler = True
-            t_controler = threading.Thread( target=controler )
-            t_controler.setDaemon(True)
-            t_controler.start()
-    '''
+    while( flag_entry == 0 ):
+        time.sleep(0.1)
+    if ( words_entry[0] == 'k' ):
+        blynk.virtual_write(1, 'Entry words is {}\n'.format(words_entry) )
+        flag_main = False
+    flag_entry = 0
+    words_entry = ''
 
 
 ###### cleanup process ######

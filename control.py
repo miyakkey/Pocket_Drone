@@ -590,6 +590,7 @@ for i in range (4) :
 print ( "Success in PWM Setup " )
 blynk.virtual_write(1, 'Success in PWM Setup\n')
 print ( "Connect Battery to ESC, press 'y' to continue..." )
+blynk.virtual_write(1, 'Connect Battery to ESC, press y to continue...\n')
 #char = input(">")
 #if ( char != 'y' ) :
 #    sys.exit("User Interrupt")
